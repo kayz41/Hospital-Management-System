@@ -9,12 +9,22 @@ import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import javax.swing.table.DefaultTableModel;
+import com.mycompany.userauthentication.dao.DoctorDAO;
 
 /**
  *
  * @author Joel Kayz
  */
 public class Doctors extends javax.swing.JFrame {
+    
+    
+    
+    private final DoctorDAO doctorDAO = new DoctorDAO();
+    
+    
+    
+    
+    
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Doctors.class.getName());
 
@@ -23,7 +33,57 @@ public class Doctors extends javax.swing.JFrame {
      */
     public Doctors() {
         initComponents();
+         loadDoctorComboBox();
     }
+    
+    
+    
+    
+    private void loadDoctorComboBox() {
+
+    javax.swing.DefaultComboBoxModel<String> model = new javax.swing.DefaultComboBoxModel<>();
+    model.addElement("Select Doctor...");
+
+    try {
+        ResultSet rs = doctorDAO.getAllDoctors();
+
+        while (rs.next()) {
+            int id = rs.getInt("DoctorID");
+            String name = rs.getString("DoctorName");
+            model.addElement(id + " - " + name);
+        }
+
+        rs.close();
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error loading doctors:\n" + e.getMessage(),
+                "Load Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    cmbDoctor.setModel(model);
+}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -52,11 +112,12 @@ public class Doctors extends javax.swing.JFrame {
         btnDISPLAY = new javax.swing.JButton();
         btnCLEAR = new javax.swing.JButton();
         btnback = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
         ScrollPanel = new javax.swing.JScrollPane();
         tblDoctors = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
         txtEmailAddress = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        cmbDoctor = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,6 +140,8 @@ public class Doctors extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Specialization");
+
+        txtDoctorID.setEnabled(false);
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
@@ -140,10 +203,7 @@ public class Doctors extends javax.swing.JFrame {
         btnback.setFocusPainted(false);
         btnback.addActionListener(this::btnbackActionPerformed);
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("Course Records");
-
+        tblDoctors.setBackground(new java.awt.Color(204, 204, 204));
         tblDoctors.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -154,12 +214,27 @@ public class Doctors extends javax.swing.JFrame {
             new String [] {
                 "Doctor ID", "Doctor Name", "Specialization", "PhoneNumber", "EmailAddress"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         ScrollPanel.setViewportView(tblDoctors);
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Email Address");
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("Doctor");
+
+        cmbDoctor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Doctor..." }));
+        cmbDoctor.addActionListener(this::cmbDoctorActionPerformed);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -168,62 +243,57 @@ public class Doctors extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                .addGap(85, 85, 85)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                .addGap(38, 38, 38)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel7))
-                                .addGap(61, 61, 61)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtDoctorName, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtDoctorID, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtSpecialization, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtEmailAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(170, 170, 170))
+                        .addContainerGap()
+                        .addComponent(ScrollPanel))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(85, 85, 85)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                        .addGap(17, 17, 17))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel11))
+                        .addGap(61, 61, 61)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmbDoctor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtDoctorName, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                            .addComponent(txtDoctorID, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                            .addComponent(txtSpecialization, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                            .addComponent(txtPhoneNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                            .addComponent(txtEmailAddress, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE))
+                        .addGap(67, 67, 67))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ScrollPanel, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(btnSAVE, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnUPDATE, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnDELETE, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnSEARCH, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnDISPLAY)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCLEAR, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(btnback)))))
+                        .addComponent(btnSAVE, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnUPDATE, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnDELETE, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSEARCH, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnDISPLAY, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCLEAR, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnback)))
                 .addContainerGap())
         );
-
-        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtDoctorID, txtDoctorName, txtPhoneNumber, txtSpecialization});
-
-        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCLEAR, btnDELETE, btnDISPLAY, btnSAVE, btnSEARCH, btnUPDATE});
-
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbDoctor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -232,7 +302,7 @@ public class Doctors extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txtDoctorName))
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtSpecialization)
                     .addComponent(jLabel4))
@@ -244,21 +314,19 @@ public class Doctors extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtEmailAddress)
                     .addComponent(jLabel7))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCLEAR)
-                    .addComponent(btnDISPLAY)
-                    .addComponent(btnSEARCH)
-                    .addComponent(btnDELETE)
-                    .addComponent(btnUPDATE)
-                    .addComponent(btnSAVE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCLEAR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnDISPLAY, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSEARCH, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnDELETE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnUPDATE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSAVE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnback, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(376, 376, 376))
+                .addGap(424, 424, 424))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -267,165 +335,335 @@ public class Doctors extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 481, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 631, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 586, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnbackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbackActionPerformed
-
-        DASHBOARD dash = new DASHBOARD();
-        dash.setVisible(true);
-        this.dispose();
+this.dispose();
     }//GEN-LAST:event_btnbackActionPerformed
 
     private void btnSEARCHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSEARCHActionPerformed
-     
-        try{
-        Connection con = DatabaseConnection.getConnection();
-       String sql = "SELECT * FROM Doctors WHERE DoctorID =?";
-       
-       PreparedStatement pst = con.prepareStatement(sql);
-       
-       pst.setInt(1,
-               Integer.parseInt(txtDoctorID.getText()));
-       ResultSet rs = pst.executeQuery();
-       
-       if(rs.next())
-       {
-           txtDoctorName.setText(
-                   rs.getString("DoctorName"));
-           
-           txtSpecialization.setText(
-          rs.getString("Specialization")); 
-         
-           txtPhoneNumber.setText(
-                   rs.getString("PhoneNUmber"));
-           
-           txtEmailAddress.setText(
-                    rs.getString("EmailAddress"));
-           
-           
-           JOptionPane.showMessageDialog(this,
-                   "Doctor Found!");
-       }
-       else
-       {
-            JOptionPane.showMessageDialog(this,
-                    "Doctor Not Found!");
-       } 
-    }
-    catch(Exception e)
-    {
-        JOptionPane.showMessageDialog(this,
-                "Error: " + e.getMessage());
+  
+
+    String doctorIDText =
+            txtDoctorID.getText().trim();
+
+    if (doctorIDText.isEmpty()) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Please enter Doctor ID.");
+
+        txtDoctorID.requestFocusInWindow();
+
+        return;
     }
 
+
+    int doctorID;
+
+    try {
+
+        doctorID =
+                Integer.parseInt(doctorIDText);
+
+    } catch (NumberFormatException e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Doctor ID must contain numbers only.");
+
+        txtDoctorID.requestFocusInWindow();
+
+        return;
+    }
+
+
+    try {
+
+        ResultSet rs =
+                doctorDAO.getDoctorByID(doctorID);
+
+
+        if (rs.next()) {
+
+            txtDoctorName.setText(
+                    rs.getString("DoctorName"));
+
+            txtSpecialization.setText(
+                    rs.getString("Specialization"));
+
+            txtPhoneNumber.setText(
+                    rs.getString("PhoneNumber"));
+
+            txtEmailAddress.setText(
+                    rs.getString("EmailAddress"));
+
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Doctor Found!");
+
+        } else {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Doctor Not Found!");
+        }
+
+
+        /*
+         * The current DAO method returns a ResultSet.
+         *
+         * Its connection/resource lifecycle will be
+         * redesigned during Phase 2.3.
+         */
+
+        rs.close();
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Search Error:\n"
+                + e.getMessage(),
+                "Search Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
         
     }//GEN-LAST:event_btnSEARCHActionPerformed
 
     private void btnSAVEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSAVEActionPerformed
 
-try{
- Connection con = DatabaseConnection.getConnection();
-      
-      String sql = "INSERT INTO Doctors(DoctorID,DoctorName,Specialization,PhoneNumber,EmailAddress) VALUES(?,?,?,?,?)";
-      
-      PreparedStatement pst = con.prepareStatement(sql);    
-      
-     pst.setInt(1,
-              Integer.parseInt(txtDoctorID.getText()));
-       
-      pst.setString(2, 
-              txtDoctorName.getText());
-      
-       pst.setString(3, 
-              txtSpecialization.getText());
-       
-       pst.setInt(4,
-              Integer.parseInt(txtPhoneNumber.getText()));
-      
-      pst.setString(5,
-             (txtEmailAddress.getText()));
-      
-     
-      
-      pst.executeUpdate();
-      
-      JOptionPane.showMessageDialog(this,
-              "Doctor Saved Successfully!");
-      
-      AuditLogger.log("Added Doctor");
-}
+                                       
 
-   
-  catch(Exception e)
-  {
-      JOptionPane.showMessageDialog(this,
-              "Error: " + e.getMessage());
-       
-  }
 
-        
-        
+
+    /*
+     * =========================================
+     * INPUT VALIDATION
+     * =========================================
+     */
+
+    if (txtDoctorID.getText().trim().isEmpty()) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Please enter Doctor ID.");
+
+        txtDoctorID.requestFocusInWindow();
+
+        return;
+    }
+
+
+    if (txtDoctorName.getText().trim().isEmpty()) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Please enter Doctor Name.");
+
+        txtDoctorName.requestFocusInWindow();
+
+        return;
+    }
+
+
+    if (txtSpecialization.getText().trim().isEmpty()) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Please enter Specialization.");
+
+        txtSpecialization.requestFocusInWindow();
+
+        return;
+    }
+
+
+    if (txtPhoneNumber.getText().trim().isEmpty()) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Please enter Phone Number.");
+
+        txtPhoneNumber.requestFocusInWindow();
+
+        return;
+    }
+
+
+    int doctorID;
+
+    try {
+
+        doctorID =
+                Integer.parseInt(
+                        txtDoctorID.getText().trim());
+
+    } catch (NumberFormatException e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Doctor ID must contain numbers only.");
+
+        txtDoctorID.requestFocusInWindow();
+
+        return;
+    }
+
+
+    int phoneNumber;
+
+    try {
+
+        phoneNumber =
+                Integer.parseInt(
+                        txtPhoneNumber.getText().trim());
+
+    } catch (NumberFormatException e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Phone Number must contain numbers only.");
+
+        txtPhoneNumber.requestFocusInWindow();
+
+        return;
+    }
+
+
+    if (!txtEmailAddress.getText().trim().isEmpty()
+            && !txtEmailAddress.getText().contains("@")) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Please enter a valid email address.");
+
+        txtEmailAddress.requestFocusInWindow();
+
+        return;
+    }
+
+
+    /*
+     * =========================================
+     * SAVE THROUGH DAO
+     * =========================================
+     */
+
+    try {
+
+        boolean saved =
+                doctorDAO.addDoctor(
+                        doctorID,
+                        txtDoctorName.getText().trim(),
+                        txtSpecialization.getText().trim(),
+                        phoneNumber,
+                        txtEmailAddress.getText().trim());
+
+
+        if (saved) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Doctor Saved Successfully!");
+
+            AuditLogger.log(
+                    "Added Doctor");
+
+            loadDoctorComboBox();
+        }
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Save Error:\n"
+                + e.getMessage(),
+                "Save Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+
+
     }//GEN-LAST:event_btnSAVEActionPerformed
 
     private void btnDISPLAYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDISPLAYActionPerformed
-       
-      try{
-          Connection con = DatabaseConnection.getConnection();
-          
-          String sql = "SELECT * FROM Doctors";
-          
-          PreparedStatement pst = con.prepareStatement(sql);
-          
-          ResultSet rs = pst.executeQuery();
-          
-          DefaultTableModel model = 
-                  (DefaultTableModel) tblDoctors.getModel();
-          model.setRowCount(0);
-          
-          while(rs.next())
-          {
-              model.addRow(new Object[]
-              {
-                  rs.getInt("DoctorID"),
-                  rs.getString("DoctorName"),
-                  rs.getString("Specialization"),
-                  rs.getString("PhoneNumber"),
-                  rs.getString("EmailAddress")
-                  
-                  
-              
-              });
-          }
-      }
-      catch(Exception e)
-      {
-          JOptionPane.showMessageDialog(this,
-                  "Error: "+ e.getMessage());
-          
-      }
+ 
+
+    try {
+
+        ResultSet rs =
+                doctorDAO.getAllDoctors();
+
+
+        DefaultTableModel model =
+                (DefaultTableModel)
+                        tblDoctors.getModel();
+
+
+        model.setRowCount(0);
+
+
+        while (rs.next()) {
+
+            model.addRow(
+                    new Object[]{
+
+                        rs.getInt("DoctorID"),
+
+                        rs.getString(
+                                "DoctorName"),
+
+                        rs.getString(
+                                "Specialization"),
+
+                        rs.getString(
+                                "PhoneNumber"),
+
+                        rs.getString(
+                                "EmailAddress")
+                    });
+        }
+
+
+        rs.close();
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Display Error:\n"
+                + e.getMessage(),
+                "Display Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
        
         
     
@@ -434,121 +672,314 @@ try{
 
     private void btnUPDATEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUPDATEActionPerformed
         
-        
-        try{
-            Connection con = DatabaseConnection.getConnection();
-            
-            String sql = "UPDATE Doctors SET  DoctorName=?, Specialization=?, PhoneNumber=?, EmailAddress=?  WHERE DoctorID=?";
-            PreparedStatement pst = con. prepareStatement(sql);
-            
-            pst.setString(1, txtDoctorName.getText());
-            
-            pst.setString(2, txtSpecialization.getText());
-            
-            pst.setDouble(3,
-                  Integer.parseInt(txtPhoneNumber.getText()));
-           
-            pst.setString(4,
-                   txtEmailAddress.getText());
-            
-           pst.setInt(5,
-                   Integer.parseInt(txtDoctorID.getText()));
-            
-            int rows = pst.executeUpdate();
-            
-            if(rows > 0)
-            {
-                JOptionPane.showMessageDialog(this,
-                        "Doctor Updated Successfully!");
-                
-                AuditLogger.log("Updated Doctor");
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(this,
-                        "Personel Not Found!");
-            }
+
+    /*
+     * =========================================
+     * VALIDATION
+     * =========================================
+     */
+
+    if (txtDoctorID.getText().trim().isEmpty()) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Please enter Doctor ID.");
+
+        txtDoctorID.requestFocusInWindow();
+
+        return;
+    }
+
+    if (txtDoctorName.getText().trim().isEmpty()) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Please enter Doctor Name.");
+
+        return;
+    }
+
+    if (txtSpecialization.getText().trim().isEmpty()) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Please enter Specialization.");
+
+        return;
+    }
+
+    if (txtPhoneNumber.getText().trim().isEmpty()) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Please enter Phone Number.");
+
+        return;
+    }
+
+    int doctorID;
+
+    try {
+
+        doctorID =
+                Integer.parseInt(
+                        txtDoctorID.getText().trim());
+
+    } catch (NumberFormatException e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Doctor ID must contain numbers only.");
+
+        return;
+    }
+
+    int phoneNumber;
+
+    try {
+
+        phoneNumber =
+                Integer.parseInt(
+                        txtPhoneNumber.getText().trim());
+
+    } catch (NumberFormatException e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Phone Number must contain numbers only.");
+
+        return;
+    }
+
+    if (!txtEmailAddress.getText().trim().isEmpty()
+            && !txtEmailAddress.getText().contains("@")) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Please enter a valid email address.");
+
+        return;
+    }
+
+    /*
+     * =========================================
+     * UPDATE THROUGH DAO
+     * =========================================
+     */
+
+    try {
+
+        boolean updated =
+                doctorDAO.updateDoctor(
+                        doctorID,
+                        txtDoctorName.getText().trim(),
+                        txtSpecialization.getText().trim(),
+                        phoneNumber,
+                        txtEmailAddress.getText().trim());
+
+        if (updated) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Doctor Updated Successfully!");
+
+            AuditLogger.log(
+                    "Updated Doctor");
+
+            loadDoctorComboBox();
+
+        } else {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Doctor Not Found!");
         }
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(this,
-                    "Error: " + e.getMessage());
-          
-        }
-        
-     
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Update Error:\n"
+                + e.getMessage(),
+                "Update Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+
+
     }//GEN-LAST:event_btnUPDATEActionPerformed
 
     private void btnDELETEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDELETEActionPerformed
       
-        try{
-           Connection con = DatabaseConnection.getConnection();
-           int choice = JOptionPane.showConfirmDialog(
-           this,
-                   "Are you sure you want to delete this Personel?",
-                   "Confirm Delete",
-                   JOptionPane.YES_NO_OPTION);
-           
-           if(choice == JOptionPane.YES_OPTION)
-           {
-               String sql = "DELETE FROM Doctors WHERE DoctorID=?";
-               
-               PreparedStatement pst =
-                       con.prepareStatement(sql);
-               
-               
-               pst.setInt(1,
-                       Integer.parseInt(txtDoctorID.getText()));
-               
-               int rows = pst.executeUpdate();
-               
-               if(rows > 0)
-               {
-                   JOptionPane.showMessageDialog(this,
-                           "Doctor Deleted Successfully!");
-                   
-                   AuditLogger.log("Deleted Doctor");
-                   
-                   txtDoctorID.setText("");
-                   txtDoctorName.setText("");
-                   txtSpecialization.setText("");
-                   txtPhoneNumber.setText("");
-                   
-               }
-               else
-               {
-                   JOptionPane.showMessageDialog(this,
-                           "Personel Not FOund!");
-                   
-                      
-               }
-               
-               
-           }
-       }
-       catch(Exception e)
-       {
-           JOptionPane.showMessageDialog(this,
-                   "Error:" + e.getMessage());
-       }
-       
-        
-    
+  
+
+ 
+
+    /*
+     * =========================================
+     * VALIDATION
+     * =========================================
+     */
+
+    if (txtDoctorID.getText().trim().isEmpty()) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Please enter Doctor ID.");
+
+        txtDoctorID.requestFocusInWindow();
+
+        return;
+    }
+
+    int doctorID;
+
+    try {
+
+        doctorID =
+                Integer.parseInt(
+                        txtDoctorID.getText().trim());
+
+    } catch (NumberFormatException e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Doctor ID must contain numbers only.");
+
+        txtDoctorID.requestFocusInWindow();
+
+        return;
+    }
+
+    /*
+     * =========================================
+     * CONFIRM DELETE
+     * =========================================
+     */
+
+    int choice =
+            JOptionPane.showConfirmDialog(
+                    this,
+                    "Are you sure you want to delete "
+                    + "this Doctor?",
+                    "Confirm Delete",
+                    JOptionPane.YES_NO_OPTION);
+
+    if (choice != JOptionPane.YES_OPTION) {
+
+        return;
+    }
+
+    /*
+     * =========================================
+     * DELETE THROUGH DAO
+     * =========================================
+     */
+
+    try {
+
+        boolean deleted =
+                doctorDAO.deleteDoctor(
+                        doctorID);
+
+        if (deleted) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Doctor Deleted Successfully!");
+
+            AuditLogger.log(
+                    "Deleted Doctor");
+
+            txtDoctorID.setText("");
+            txtDoctorName.setText("");
+            txtSpecialization.setText("");
+            txtPhoneNumber.setText("");
+            txtEmailAddress.setText("");
+
+            loadDoctorComboBox();
+
+        } else {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Doctor Not Found!");
+        }
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Delete Error:\n"
+                + e.getMessage(),
+                "Delete Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+
         
     }//GEN-LAST:event_btnDELETEActionPerformed
 
     private void btnCLEARActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCLEARActionPerformed
      
-        
-        
-      txtDoctorID.setText("");
-      txtDoctorName.setText("");
-      txtSpecialization.setText("");
-      txtPhoneNumber.setText("");
-      txtEmailAddress.setText("");
-        
+  
+       
+
+    txtDoctorID.setText("");
+    txtDoctorName.setText("");
+    txtSpecialization.setText("");
+    txtPhoneNumber.setText("");
+    txtEmailAddress.setText("");
+
   
     }//GEN-LAST:event_btnCLEARActionPerformed
+
+    private void cmbDoctorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDoctorActionPerformed
+
+
+
+    String selected = (String) cmbDoctor.getSelectedItem();
+
+    if (selected == null || selected.equals("Select Doctor...")) {
+        return;
+    }
+
+    String idPart = selected.split(" - ")[0].trim();
+
+    try {
+        int doctorID = Integer.parseInt(idPart);
+
+        ResultSet rs = doctorDAO.getDoctorByID(doctorID);
+
+        if (rs.next()) {
+            txtDoctorID.setText(String.valueOf(doctorID));
+            txtDoctorName.setText(rs.getString("DoctorName"));
+            txtSpecialization.setText(rs.getString("Specialization"));
+            txtPhoneNumber.setText(rs.getString("PhoneNumber"));
+            txtEmailAddress.setText(rs.getString("EmailAddress"));
+        }
+
+        rs.close();
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error loading doctor:\n" + e.getMessage(),
+                "Load Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+        
+        
+      
+        
+        
+        
+        
+      
+    }//GEN-LAST:event_cmbDoctorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -584,12 +1015,13 @@ try{
     private javax.swing.JButton btnSEARCH;
     private javax.swing.JButton btnUPDATE;
     private javax.swing.JButton btnback;
+    private javax.swing.JComboBox<String> cmbDoctor;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

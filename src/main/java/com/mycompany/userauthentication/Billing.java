@@ -8,25 +8,178 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
+import java.sql.Statement;
 /**
  *
  * @author Joel Kayz
  */
 public class Billing extends javax.swing.JFrame {
     
+    
+    
+    BillingDAO dao = new BillingDAO();
+    
+    
+    
+    
+    String patientPhone = "";
+String patientEmail = "";
+    
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Billing.class.getName());
+    
+    
+    
+    
+    
+    private void loadPatients(){
+
+    try{
+
+        Connection con = DatabaseConnection.getConnection();
+
+        String sql = "SELECT PatientID, PatientName FROM Patients";
+
+        PreparedStatement pst = con.prepareStatement(sql);
+
+        ResultSet rs = pst.executeQuery();
+
+
+        cmbPatient.removeAllItems();
+
+
+        while(rs.next()){
+
+            cmbPatient.addItem(
+                rs.getInt("PatientID")
+                + " - "
+                + rs.getString("PatientName")
+            );
+
+        }
+
+
+    }
+    catch(Exception e){
+
+        JOptionPane.showMessageDialog(this,
+                "Patient Loading Error: "
+                + e.getMessage());
+
+    }
+
+}
+    
+    
+    
+   private void loadBillings() {
+
+    try {
+
+        DefaultTableModel model =
+                (DefaultTableModel)
+                tblBillings.getModel();
+
+
+        model.setRowCount(0);
+
+
+        ResultSet rs =
+                dao.getAllBillings();
+
+
+        while (rs.next()) {
+
+            model.addRow(
+                    new Object[]{
+
+                        rs.getInt("BillingID"),
+
+                        rs.getString("PatientID"),
+
+                        rs.getInt("Amount"),
+
+                        rs.getString(
+                                "PaymentMethod"),
+
+                        rs.getDate(
+                                "PaymentDate")
+
+                    });
+        }
+
+
+        rs.close();
+
+    }
+
+    catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Unable to load billing records:\n"
+                + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+}
+    
+    
+    private void clearBillingFields() {
+
+    txtBillingID.setText("");
+    txtPatientID.setText("");
+    txtAmount.setText("");
+    txtPaymentMethod.setText("");
+    txtPaymentDate.setText("");
+
+    cmbPatient.setSelectedIndex(-1);
+
+    txtBillingID.requestFocus();
+}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     /**
      * Creates new form Payments
      */
-    public Billing() {
-        initComponents();
-        
-        
-     
-    }
+  public Billing() {
 
+    initComponents();
+
+    loadPatients();
+
+    loadBillings();
+
+    cmbPatient.setSelectedIndex(-1);
+
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -54,11 +207,13 @@ public class Billing extends javax.swing.JFrame {
         btnDISPLAY = new javax.swing.JButton();
         btnCLEAR = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
-        jLabel7 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblBillings = new javax.swing.JTable();
         txtPaymentDate = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        cmbPatient = new javax.swing.JComboBox<>();
+        btnINVOICE = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -142,27 +297,50 @@ public class Billing extends javax.swing.JFrame {
         btnBack.setText("BACK TO DASHBOARD");
         btnBack.addActionListener(this::btnBackActionPerformed);
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Payment Records");
-
         tblBillings.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Billing ID", "Patient ID", "Amount", "Payment Method", "Payment Date"
+                "Billing ID", "Patient ID", "Patient Name", "Amount", "Payment Method", "PaymentDate"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblBillings.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblBillingsMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblBillings);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Payment Date");
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("Patient");
+
+        cmbPatient.addActionListener(this::cmbPatientActionPerformed);
+
+        btnINVOICE.setBackground(new java.awt.Color(102, 102, 102));
+        btnINVOICE.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnINVOICE.setForeground(new java.awt.Color(255, 255, 255));
+        btnINVOICE.setText("PRINT INVOICE");
+        btnINVOICE.setBorderPainted(false);
+        btnINVOICE.setFocusPainted(false);
+        btnINVOICE.addActionListener(this::btnINVOICEActionPerformed);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -176,56 +354,62 @@ public class Billing extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(88, 88, 88)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                                 .addGap(16, 16, 16)
-                                .addComponent(btnSAVE, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnSAVE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnUPDATE, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnUPDATE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(btnDELETE, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnSEARCH, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(11, 11, 11)
-                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnDELETE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnDISPLAY)
+                                .addComponent(btnSEARCH, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCLEAR, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 19, Short.MAX_VALUE)))
+                                .addComponent(btnDISPLAY, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnCLEAR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(19, 19, 19)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(38, 38, 38)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addGap(135, 135, 135)
+                        .addComponent(cmbPatient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6)
                             .addComponent(jLabel8)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel4))
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(65, 65, 65)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtBillingID, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPatientID, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPaymentDate, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(56, 56, 56))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(btnBack)
-                        .addContainerGap())))
+                            .addComponent(txtBillingID)
+                            .addComponent(txtPatientID)
+                            .addComponent(txtAmount)
+                            .addComponent(txtPaymentMethod)
+                            .addComponent(txtPaymentDate))))
+                .addGap(56, 56, 56))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnINVOICE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(131, 131, 131)
+                .addComponent(btnBack, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(28, 28, 28)
+                .addComponent(jLabel1)
+                .addGap(24, 24, 24)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbPatient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txtBillingID))
@@ -245,7 +429,7 @@ public class Billing extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtPaymentDate)
                     .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(24, 24, 24)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCLEAR)
                     .addComponent(btnDISPLAY)
@@ -253,307 +437,640 @@ public class Billing extends javax.swing.JFrame {
                     .addComponent(btnDELETE)
                     .addComponent(btnUPDATE)
                     .addComponent(btnSAVE))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel7)
-                .addGap(18, 18, 18)
+                .addGap(34, 34, 34)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(597, 597, 597))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnINVOICE))
+                .addGap(573, 573, 573))
         );
+
+        jPanel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBack, btnINVOICE});
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 369, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(369, 369, 369)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 519, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 582, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 606, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 582, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSEARCHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSEARCHActionPerformed
-       
-        
-        
-        try{
-        Connection con = DatabaseConnection.getConnection();
-       String sql = "SELECT * FROM Billing WHERE BillingID =?";
-       
-       PreparedStatement pst = con.prepareStatement(sql);
-       
-       pst.setInt(1,
-               Integer.parseInt(txtBillingID.getText()));
-       ResultSet rs = pst.executeQuery();
-       
-       if(rs.next())
-       {
-           txtPatientID.setText(
-                   rs.getString("PatientID"));
-           
-           txtAmount.setText(
-          rs.getString("Amount")); 
-         
-           txtPaymentMethod.setText(
-                   rs.getString("PaymentMethod"));
-           
-           txtPaymentDate.setText(
-                   rs.getString("PaymentDate"));
-           
-           
-           JOptionPane.showMessageDialog(this,
-                   "Payment Found!");
-       }
-       else
-       {
-            JOptionPane.showMessageDialog(this,
-                    "Payment Not Found!");
-       } 
-    }
-    catch(Exception e)
-    {
-        JOptionPane.showMessageDialog(this,
-                "Error: " + e.getMessage());
+   
+
+    try {
+
+        if (!ValidationUtil.required(
+                txtBillingID,
+                "Billing ID")) {
+
+            return;
+        }
+
+
+       String billingID =
+        txtBillingID.getText().trim();
+
+ResultSet rs =
+        dao.searchBilling(billingID);
+
+
+        if (rs.next()) {
+
+            txtBillingID.setText(
+                    rs.getString("BillingID"));
+
+            txtPatientID.setText(
+                    rs.getString("PatientID"));
+
+            txtAmount.setText(
+                    rs.getString("Amount"));
+
+            txtPaymentMethod.setText(
+                    rs.getString("PaymentMethod"));
+
+            txtPaymentDate.setText(
+                    rs.getString("PaymentDate"));
+
+
+            // Select matching patient
+            String patientID =
+                    rs.getString("PatientID");
+
+
+            for (int i = 0;
+                 i < cmbPatient.getItemCount();
+                 i++) {
+
+                String item =
+                        cmbPatient.getItemAt(i);
+
+
+                if (item.startsWith(
+                        patientID + " - ")) {
+
+                    cmbPatient.setSelectedIndex(i);
+
+                    break;
+                }
+            }
+
+        }
+
+        else {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No billing record found.",
+                    "Search Result",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+        }
+
+
+        rs.close();
+
     }
 
+    catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Search error:\n"
+                + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
   
-        
     }//GEN-LAST:event_btnSEARCHActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
 
-       DASHBOARD dash = new DASHBOARD();
-       dash.setVisible(true);
-       this.dispose();
+     this.dispose();
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnSAVEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSAVEActionPerformed
         
-        
- try{
- Connection con = DatabaseConnection.getConnection();
-      
-      String sql = "INSERT INTO Billing(PatientID,Amount,PaymentMethod,PaymentDate) VALUES(?,?,?,?)";
-      
-      PreparedStatement pst = con.prepareStatement(sql);    
-      
-    
-       
-      
-      
-       pst.setInt(1, 
-              Integer.parseInt(txtPatientID.getText()));  
-       
-       pst.setString(2, 
-              txtAmount.getText());
-       
-       pst.setString(3,
-              (txtPaymentMethod.getText()));
-      
-       pst.setString(4, 
-              txtPaymentDate.getText());
-      
-      
-     
-      
-      pst.executeUpdate();
-      
-      JOptionPane.showMessageDialog(this,
-              "Bill Saved Successfully!");
-      
-      AuditLogger.log("Added Bill");
+
+
+    try {
+
+        // ==============================
+        // VALIDATION
+        // ==============================
+
+        if (!ValidationUtil.required(
+                cmbPatient,
+                "a patient")) {
+
+            return;
+        }
+
+        if (!ValidationUtil.required(
+                txtPatientID,
+                "Patient ID")) {
+
+            return;
+        }
+
+        if (!ValidationUtil.positiveInteger(
+                txtAmount,
+                "Amount")) {
+
+            return;
+        }
+
+        if (!ValidationUtil.required(
+                txtPaymentMethod,
+                "Payment Method")) {
+
+            return;
+        }
+
+       if (!ValidationUtil.optionalDate(
+        txtPaymentDate,
+        "Payment Date")) {
+
+    return;
 }
 
-   
-  catch(Exception e)
-  {
-      JOptionPane.showMessageDialog(this,
-              "Error: " + e.getMessage());
-       
-  }
 
-   
+        // ==============================
+        // CREATE MODEL
+        // ==============================
+
+        BillingModel model =
+                new BillingModel();
+
+
+        model.setPatientID(
+                txtPatientID.getText().trim());
+
+
+        model.setAmount(
+                Integer.parseInt(
+                        txtAmount.getText().trim()));
+
+
+        model.setPaymentMethod(
+                txtPaymentMethod.getText().trim());
+
+
+        model.setPaymentDate(
+                txtPaymentDate.getText().trim());
+
+
+        // ==============================
+        // SAVE
+        // ==============================
+
+        dao.saveBilling(model);
+
+
+        // ==============================
+        // REFRESH
+        // ==============================
+
+        loadBillings();
+
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Billing saved successfully.",
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE);
+
+
+        clearBillingFields();
+
+    }
+
+    catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Unable to save billing record:\n"
+                + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
 
     }//GEN-LAST:event_btnSAVEActionPerformed
 
     private void btnUPDATEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUPDATEActionPerformed
         
-         try{
-            Connection con = DatabaseConnection.getConnection();
-            
-            String sql = "UPDATE Billing SET PatientID=?, Amount=?, PaymentMethod=?  WHERE BillingID=?";
-            PreparedStatement pst = con. prepareStatement(sql);
-            
-            pst.setInt(1,
-                    Integer.parseInt(txtPatientID.getText()));
-            
-            pst.setString(2,
-                    txtAmount.getText());
-            
-            pst.setString(3,
-                    txtPaymentMethod.getText());
-            
-           pst.setInt(4,
-                   Integer.parseInt(txtBillingID.getText()));
-            
-            
-            int rows = pst.executeUpdate();
-            
-            if(rows > 0)
-            {
-                JOptionPane.showMessageDialog(this,
-                        "Bill Updated Successfully!");
-                
-                AuditLogger.log("Updated Bill");
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(this,
-                        "Bill Not Found!");
-            }
+
+
+    try {
+
+        // ==============================
+        // CHECK RECORD ID
+        // ==============================
+
+        if (!ValidationUtil.required(
+                txtBillingID,
+                "Billing ID")) {
+
+            return;
         }
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(this,
-                    "Error: " + e.getMessage());
-          
+
+
+        // ==============================
+        // VALIDATION
+        // ==============================
+
+        if (!ValidationUtil.required(
+                cmbPatient,
+                "a patient")) {
+
+            return;
         }
-        
-     
+
+        if (!ValidationUtil.required(
+                txtPatientID,
+                "Patient ID")) {
+
+            return;
+        }
+
+        if (!ValidationUtil.positiveInteger(
+                txtAmount,
+                "Amount")) {
+
+            return;
+        }
+
+        if (!ValidationUtil.required(
+                txtPaymentMethod,
+                "Payment Method")) {
+
+            return;
+        }
+
+       if (!ValidationUtil.optionalDate(
+        txtPaymentDate,
+        "Payment Date")) {
+
+    return;
+}
+
+
+        // ==============================
+        // CONFIRM UPDATE
+        // ==============================
+
+        int option =
+                JOptionPane.showConfirmDialog(
+                        this,
+                        "Are you sure you want to update "
+                        + "this billing record?",
+                        "Confirm Update",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+
+
+        if (option != JOptionPane.YES_OPTION) {
+
+            return;
+        }
+
+
+        // ==============================
+        // CREATE MODEL
+        // ==============================
+
+        BillingModel model =
+                new BillingModel();
+
+
+        model.setBillingID(
+                Integer.parseInt(
+                        txtBillingID.getText().trim()));
+
+
+        model.setPatientID(
+                txtPatientID.getText().trim());
+
+
+        model.setAmount(
+                Integer.parseInt(
+                        txtAmount.getText().trim()));
+
+
+        model.setPaymentMethod(
+                txtPaymentMethod.getText().trim());
+
+
+        model.setPaymentDate(
+                txtPaymentDate.getText().trim());
+
+
+        // ==============================
+        // UPDATE
+        // ==============================
+
+        dao.updateBilling(model);
+
+
+        // ==============================
+        // REFRESH
+        // ==============================
+
+        loadBillings();
+
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Billing updated successfully.",
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE);
+
+
+        clearBillingFields();
+
+    }
+
+    catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Unable to update billing record:\n"
+                + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
  
     }//GEN-LAST:event_btnUPDATEActionPerformed
 
     private void btnDISPLAYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDISPLAYActionPerformed
       
-        try{
-          Connection con = DatabaseConnection.getConnection();
-          
-          String sql = "SELECT * FROM Billing";
-          
-          PreparedStatement pst = con.prepareStatement(sql);
-          
-          ResultSet rs = pst.executeQuery();
-          
-          DefaultTableModel model = 
-                  (DefaultTableModel) tblBillings.getModel();
-          model.setRowCount(0);
-          
-          while(rs.next())
-          {
-              model.addRow(new Object[]
-              {
-                  rs.getInt("BillingID"),
-                  rs.getString("PatientID"),
-                  rs.getString("Amount"),
-                  rs.getString("PaymentMethod"),
-                  rs.getString("PaymentDate"),
-                  
-                  
-              
-              });
-          }
-      }
-      catch(Exception e)
-      {
-          JOptionPane.showMessageDialog(this,
-                  "Error: "+ e.getMessage());
-          
-      }
-        
-    
+
+
+    try {
+
+        loadBillings();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Billing records displayed successfully.",
+                "Display",
+                JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
+    catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Unable to display billing records:\n"
+                + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
     }//GEN-LAST:event_btnDISPLAYActionPerformed
 
     private void btnDELETEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDELETEActionPerformed
        
-        try{
-           Connection con = DatabaseConnection.getConnection();
-           int choice = JOptionPane.showConfirmDialog(
-           this,
-                   "Are you sure you want to delete this Payment?",
-                   "Confirm Delete",
-                   JOptionPane.YES_NO_OPTION);
-           
-           if(choice == JOptionPane.YES_OPTION)
-           {
-               String sql = "DELETE FROM Billing WHERE BillingID=?";
-               
-               PreparedStatement pst =
-                       con.prepareStatement(sql);
-               
-               
-               pst.setInt(1,
-                       Integer.parseInt(txtBillingID.getText()));
-               
-               int rows = pst.executeUpdate();
-               
-               if(rows > 0)
-               {
-                   JOptionPane.showMessageDialog(this,
-                           "Bill Deleted Successfully!");
-                   
-                   AuditLogger.log("Deleted Bill");
-                   
-                   txtBillingID.setText("");
-                   txtPatientID.setText("");
-                   txtAmount.setText("");
-                   txtPaymentMethod.setText("");
-                   
-               }
-               else
-               {
-                   JOptionPane.showMessageDialog(this,
-                           "Course Not FOund!");
-                   
-                      
-               }
-               
-               
-           }
-       }
-       catch(Exception e)
-       {
-           JOptionPane.showMessageDialog(this,
-                   "Error:" + e.getMessage());
-       }
-       
-        
-    
-   
+
+
+    try {
+
+        if (!ValidationUtil.required(
+                txtBillingID,
+                "Billing ID")) {
+
+            return;
+        }
+
+
+        int option =
+                JOptionPane.showConfirmDialog(
+                        this,
+                        "Are you sure you want to delete "
+                        + "this billing record?",
+                        "Confirm Delete",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+
+
+        if (option != JOptionPane.YES_OPTION) {
+
+            return;
+        }
+
+
+        int billingID =
+                Integer.parseInt(
+                        txtBillingID.getText().trim());
+
+
+        dao.deleteBilling(billingID);
+
+
+        loadBillings();
+
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Billing deleted successfully.",
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE);
+
+
+        clearBillingFields();
+
+    }
+
+    catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Unable to delete billing record:\n"
+                + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
     }//GEN-LAST:event_btnDELETEActionPerformed
 
     private void btnCLEARActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCLEARActionPerformed
       
-           
-      txtBillingID.setText("");
-      txtPatientID.setText("");
-      txtAmount.setText("");
-      txtPaymentMethod.setText("");
-      txtPaymentDate.setText("");
-      
-        
+
+
+    clearBillingFields();
+
+
         
     
         
     }//GEN-LAST:event_btnCLEARActionPerformed
+
+    private void cmbPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPatientActionPerformed
+
+   
+
+    if (cmbPatient.getSelectedItem() == null) {
+        return;
+    }
+
+  String selectedPatient =
+        cmbPatient.getSelectedItem().toString();
+
+String patientID =
+        selectedPatient.split(" - ")[0];
+
+txtPatientID.setText(patientID);
+
+    try {
+
+        Connection con =
+                DatabaseConnection.getConnection();
+
+        String sql =
+                "SELECT PatientID, PatientName, EmailAddress "
+                + "FROM Patients WHERE PatientID=?";
+
+        PreparedStatement pst =
+                con.prepareStatement(sql);
+
+        pst.setInt(1,
+                Integer.parseInt(patientID));
+
+        ResultSet rs =
+                pst.executeQuery();
+
+        if (rs.next()) {
+
+            txtPatientID.setText(
+                    rs.getString("PatientID"));
+
+            patientEmail =
+                    rs.getString("EmailAddress");
+
+        }
+
+        rs.close();
+        pst.close();
+        con.close();
+
+    }
+
+    catch (Exception e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Patient Loading Error:\n"
+                + e.getMessage());
+
+    }
+
+
+
+    }//GEN-LAST:event_cmbPatientActionPerformed
+
+    private void btnINVOICEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnINVOICEActionPerformed
+       try {
+
+    Connection con = DatabaseConnection.getConnection();
+
+    String sql =
+        "SELECT PatientName FROM Patients WHERE PatientID=?";
+
+    PreparedStatement pst =
+        con.prepareStatement(sql);
+
+    pst.setInt(1,
+            Integer.parseInt(txtPatientID.getText()));
+
+    ResultSet rs = pst.executeQuery();
+
+    String patientName = "";
+
+    if (rs.next()) {
+        patientName = rs.getString("PatientName");
+    }
+
+    Invoice invoice = new Invoice(
+
+            txtBillingID.getText(),
+
+            txtPatientID.getText(),
+
+            patientName,
+
+            txtAmount.getText(),
+
+            txtPaymentMethod.getText(),
+
+            txtPaymentDate.getText()
+
+    );
+
+    invoice.setVisible(true);
+
+    rs.close();
+    pst.close();
+    con.close();
+
+}
+catch(Exception e) {
+
+    JOptionPane.showMessageDialog(this,
+            "Error: " + e.getMessage());
+
+}
+    }//GEN-LAST:event_btnINVOICEActionPerformed
+
+    private void tblBillingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBillingsMouseClicked
+int row = tblBillings.getSelectedRow();
+
+txtBillingID.setText(
+        tblBillings.getValueAt(row,0).toString());
+
+txtPatientID.setText(
+        tblBillings.getValueAt(row,1).toString());
+
+txtAmount.setText(
+        tblBillings.getValueAt(row,2).toString());
+
+txtPaymentMethod.setText(
+        tblBillings.getValueAt(row,3).toString());
+
+txtPaymentDate.setText(
+        tblBillings.getValueAt(row,4).toString());    }//GEN-LAST:event_tblBillingsMouseClicked
 
     /**
      * @param args the command line arguments
@@ -580,20 +1097,23 @@ public class Billing extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> new Billing().setVisible(true));
     }
 
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnCLEAR;
     private javax.swing.JButton btnDELETE;
     private javax.swing.JButton btnDISPLAY;
+    private javax.swing.JButton btnINVOICE;
     private javax.swing.JButton btnSAVE;
     private javax.swing.JButton btnSEARCH;
     private javax.swing.JButton btnUPDATE;
+    private javax.swing.JComboBox<String> cmbPatient;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -606,3 +1126,5 @@ public class Billing extends javax.swing.JFrame {
     private javax.swing.JTextField txtPaymentMethod;
     // End of variables declaration//GEN-END:variables
 }
+
+

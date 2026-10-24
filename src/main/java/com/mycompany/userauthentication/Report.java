@@ -525,10 +525,7 @@ catch(Exception e)
 
     private void btnDASHBOARD2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDASHBOARD2ActionPerformed
       
-         DASHBOARD db = new DASHBOARD();
-        db.setVisible(true);
-        this.dispose();
-
+       this.dispose();
         
         
         

@@ -20,8 +20,109 @@ public class MedicalRecords extends javax.swing.JFrame {
     /**
      * Creates new form MedicalRecords
      */
+    
+    
+    private void loadPatients() {
+        try {
+            Connection con = DatabaseConnection.getConnection();
+            
+            String sql = "SELECT PatientID, PatientName FROM Patients";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            ResultSet rs = pst.executeQuery();
+            
+            cmbPatient.removeAllItems();
+            
+            while (rs.next()) {
+                
+                cmbPatient.addItem(
+                        rs.getInt("PatientID")
+                        + " - "
+                        + rs.getString("PatientName"));
+            }
+            
+            rs.close();
+            pst.close();
+            con.close();
+            
+        } catch (Exception e) {
+            
+            JOptionPane.showMessageDialog(this,
+                    "Patient Loading Error: " + e.getMessage());
+        }
+    }
+            
+            
+            
+            
+            
+           
+            
+            
+        
+    private void loadDoctors() {
+        try {
+            Connection con = DatabaseConnection.getConnection();
+            
+            String sql = "SELECT DoctorID, DoctorName FROM Doctors";
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            ResultSet rs = pst.executeQuery();
+            
+            cmbDoctor.removeAllItems();
+            
+            while (rs.next()) {
+            
+            cmbDoctor.addItem(
+            rs.getInt("DoctorID")
+                    + " - "
+                    + rs.getString("DoctorName"));
+            }
+            rs.close();
+            pst.close();
+            con.close();
+            
+        } catch (Exception e) {
+             
+            JOptionPane.showMessageDialog(this,
+                    "Doctor Loading Error: " + e.getMessage());
+        }
+    }
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public MedicalRecords() {
         initComponents();
+        
+     loadDoctors();
+     loadPatients(); 
     }
 
     /**
@@ -38,39 +139,44 @@ public class MedicalRecords extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         btnDASHBOARD = new javax.swing.JButton();
+        btnCLEAR = new javax.swing.JButton();
+        btnDISPLAY = new javax.swing.JButton();
+        btnSEARCH = new javax.swing.JButton();
+        btnDELETE = new javax.swing.JButton();
+        btnUPDATE = new javax.swing.JButton();
+        btnSAVE = new javax.swing.JButton();
         txtRecordID = new javax.swing.JTextField();
         txtPatientID = new javax.swing.JTextField();
         txtPatientName = new javax.swing.JTextField();
         txtDoctorID = new javax.swing.JTextField();
         txtDoctorName = new javax.swing.JTextField();
-        btnSAVE = new javax.swing.JButton();
-        btnUPDATE = new javax.swing.JButton();
-        btnCLEAR = new javax.swing.JButton();
-        btnSEARCH = new javax.swing.JButton();
-        btnDELETE = new javax.swing.JButton();
-        btnDISPLAY = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
         tblMedicalRecords = new javax.swing.JTable();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        txtDiagnosis = new javax.swing.JTextArea();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        txtMedicalHistory = new javax.swing.JTextArea();
-        jScrollPane7 = new javax.swing.JScrollPane();
-        txtPrescription = new javax.swing.JTextArea();
-        jScrollPane8 = new javax.swing.JScrollPane();
-        txtTreatment = new javax.swing.JTextArea();
-        jScrollPane9 = new javax.swing.JScrollPane();
-        txtAllergies = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        cmbPatient = new javax.swing.JComboBox<>();
+        cmbDoctor = new javax.swing.JComboBox<>();
+        jLabel13 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        txtTreatment = new javax.swing.JTextArea();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        txtMedicalHistory = new javax.swing.JTextArea();
         jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtDiagnosis = new javax.swing.JTextArea();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        txtPrescription = new javax.swing.JTextArea();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        txtAllergies = new javax.swing.JTextArea();
         jLabel11 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -80,6 +186,7 @@ public class MedicalRecords extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(102, 102, 102));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("MEDICAL RECORDS");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -87,16 +194,16 @@ public class MedicalRecords extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(279, 279, 279)
+                .addGap(461, 461, 461)
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(33, 33, 33)
+                .addGap(31, 31, 31)
                 .addComponent(jLabel1)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(102, 102, 102));
@@ -108,58 +215,27 @@ public class MedicalRecords extends javax.swing.JFrame {
         btnDASHBOARD.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         btnDASHBOARD.addActionListener(this::btnDASHBOARDActionPerformed);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnDASHBOARD, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnDASHBOARD, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(52, Short.MAX_VALUE))
-        );
-
-        txtRecordID.addActionListener(this::txtRecordIDActionPerformed);
-
-        btnSAVE.setBackground(new java.awt.Color(102, 102, 102));
-        btnSAVE.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnSAVE.setForeground(new java.awt.Color(255, 255, 255));
-        btnSAVE.setText("SAVE");
-        btnSAVE.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnSAVE.setBorderPainted(false);
-        btnSAVE.setFocusPainted(false);
-        btnSAVE.addActionListener(this::btnSAVEActionPerformed);
-
-        btnUPDATE.setBackground(new java.awt.Color(102, 102, 102));
-        btnUPDATE.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnUPDATE.setForeground(new java.awt.Color(255, 255, 255));
-        btnUPDATE.setText("UPDATE");
-        btnUPDATE.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnUPDATE.setBorderPainted(false);
-        btnUPDATE.setFocusPainted(false);
-        btnUPDATE.addActionListener(this::btnUPDATEActionPerformed);
-
         btnCLEAR.setBackground(new java.awt.Color(102, 102, 102));
         btnCLEAR.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnCLEAR.setForeground(new java.awt.Color(255, 255, 255));
         btnCLEAR.setText("CLEAR");
         btnCLEAR.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnCLEAR.setBorderPainted(false);
         btnCLEAR.setFocusPainted(false);
         btnCLEAR.addActionListener(this::btnCLEARActionPerformed);
+
+        btnDISPLAY.setBackground(new java.awt.Color(102, 102, 102));
+        btnDISPLAY.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnDISPLAY.setForeground(new java.awt.Color(255, 255, 255));
+        btnDISPLAY.setText("DISPLAY");
+        btnDISPLAY.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnDISPLAY.setFocusPainted(false);
+        btnDISPLAY.addActionListener(this::btnDISPLAYActionPerformed);
 
         btnSEARCH.setBackground(new java.awt.Color(102, 102, 102));
         btnSEARCH.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnSEARCH.setForeground(new java.awt.Color(255, 255, 255));
         btnSEARCH.setText("SEARCH");
         btnSEARCH.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnSEARCH.setBorderPainted(false);
         btnSEARCH.setFocusPainted(false);
         btnSEARCH.addActionListener(this::btnSEARCHActionPerformed);
 
@@ -168,51 +244,77 @@ public class MedicalRecords extends javax.swing.JFrame {
         btnDELETE.setForeground(new java.awt.Color(255, 255, 255));
         btnDELETE.setText("DELETE");
         btnDELETE.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnDELETE.setBorderPainted(false);
         btnDELETE.setFocusPainted(false);
         btnDELETE.addActionListener(this::btnDELETEActionPerformed);
 
-        btnDISPLAY.setBackground(new java.awt.Color(102, 102, 102));
-        btnDISPLAY.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnDISPLAY.setForeground(new java.awt.Color(255, 255, 255));
-        btnDISPLAY.setText("DISPLAY");
-        btnDISPLAY.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnDISPLAY.setBorderPainted(false);
-        btnDISPLAY.setFocusPainted(false);
-        btnDISPLAY.addActionListener(this::btnDISPLAYActionPerformed);
+        btnUPDATE.setBackground(new java.awt.Color(102, 102, 102));
+        btnUPDATE.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnUPDATE.setForeground(new java.awt.Color(255, 255, 255));
+        btnUPDATE.setText("UPDATE");
+        btnUPDATE.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnUPDATE.setFocusPainted(false);
+        btnUPDATE.addActionListener(this::btnUPDATEActionPerformed);
+
+        btnSAVE.setBackground(new java.awt.Color(102, 102, 102));
+        btnSAVE.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnSAVE.setForeground(new java.awt.Color(255, 255, 255));
+        btnSAVE.setText("SAVE");
+        btnSAVE.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnSAVE.setFocusPainted(false);
+        btnSAVE.addActionListener(this::btnSAVEActionPerformed);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnDASHBOARD, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(btnCLEAR, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(47, 47, 47)
+                        .addComponent(btnDELETE, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(52, 52, 52)
+                        .addComponent(btnUPDATE, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(68, 68, 68)
+                        .addComponent(btnSAVE, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnSEARCH, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(53, 53, 53)
+                        .addComponent(btnDISPLAY, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCLEAR)
+                    .addComponent(btnDISPLAY)
+                    .addComponent(btnSEARCH)
+                    .addComponent(btnDELETE)
+                    .addComponent(btnUPDATE)
+                    .addComponent(btnSAVE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnDASHBOARD, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+
+        txtRecordID.addActionListener(this::txtRecordIDActionPerformed);
 
         tblMedicalRecords.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7", "Title 8", "Title 9", "Title 10"
             }
         ));
         jScrollPane6.setViewportView(tblMedicalRecords);
-
-        txtDiagnosis.setColumns(20);
-        txtDiagnosis.setRows(5);
-        jScrollPane1.setViewportView(txtDiagnosis);
-
-        txtMedicalHistory.setColumns(20);
-        txtMedicalHistory.setRows(5);
-        jScrollPane4.setViewportView(txtMedicalHistory);
-
-        txtPrescription.setColumns(20);
-        txtPrescription.setRows(5);
-        jScrollPane7.setViewportView(txtPrescription);
-
-        txtTreatment.setColumns(20);
-        txtTreatment.setRows(5);
-        jScrollPane8.setViewportView(txtTreatment);
-
-        txtAllergies.setColumns(20);
-        txtAllergies.setRows(5);
-        jScrollPane9.setViewportView(txtAllergies);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -234,151 +336,201 @@ public class MedicalRecords extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Doctor Name");
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Diagnosis");
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setText("Patient");
+
+        cmbPatient.addActionListener(this::cmbPatientActionPerformed);
+
+        cmbDoctor.addActionListener(this::cmbDoctorActionPerformed);
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setText("Doctor");
+
+        jPanel4.setBackground(new java.awt.Color(0, 0, 0));
+
+        txtTreatment.setColumns(20);
+        txtTreatment.setRows(5);
+        jScrollPane8.setViewportView(txtTreatment);
+
+        txtMedicalHistory.setColumns(20);
+        txtMedicalHistory.setRows(5);
+        jScrollPane4.setViewportView(txtMedicalHistory);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Treatment");
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("Prescription");
-
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setText("Medical History");
 
+        txtDiagnosis.setColumns(20);
+        txtDiagnosis.setRows(5);
+        jScrollPane1.setViewportView(txtDiagnosis);
+
+        txtPrescription.setColumns(20);
+        txtPrescription.setRows(5);
+        jScrollPane7.setViewportView(txtPrescription);
+
+        txtAllergies.setColumns(20);
+        txtAllergies.setRows(5);
+        jScrollPane9.setViewportView(txtAllergies);
+
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("Allergies");
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("Prescription");
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Diagnosis");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(46, 46, 46)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
+                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane9))
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(48, 48, 48)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jLabel7)
+                .addGap(89, 89, 89)
+                .addComponent(jLabel9)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
+                        .addComponent(jScrollPane9, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(jLabel11)
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jScrollPane4)
+                        .addGap(16, 16, 16))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                        .addGap(27, 27, 27))))
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 810, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel5))
-                                .addGap(42, 42, 42)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(txtRecordID, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                                            .addComponent(txtPatientID)
-                                            .addComponent(txtDoctorName))
-                                        .addComponent(txtPatientName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(txtDoctorID, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addContainerGap(12, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jLabel13)
+                            .addComponent(jLabel12))
+                        .addGap(32, 32, 32)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbPatient, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbDoctor, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(109, 109, 109)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnSAVE, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnUPDATE, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnDELETE, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnSEARCH, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnDISPLAY, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCLEAR, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGap(6, 6, 6)
+                                .addComponent(jLabel4)
+                                .addGap(44, 44, 44)
+                                .addComponent(txtPatientName, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtDoctorName, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtPatientID, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtRecordID, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtDoctorID, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(90, 90, 90))
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtRecordID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPatientID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPatientName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addGap(12, 12, 12)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtDoctorID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addGap(12, 12, 12)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtDoctorName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(26, 26, 26))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(11, 11, 11)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(jLabel8))
-                    .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addGap(32, 32, 32))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(jLabel10))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addComponent(jLabel11))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSAVE)
-                    .addComponent(btnUPDATE)
-                    .addComponent(btnDELETE)
-                    .addComponent(btnSEARCH)
-                    .addComponent(btnDISPLAY)
-                    .addComponent(btnCLEAR))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cmbPatient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12)
+                            .addComponent(txtPatientID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)
+                            .addComponent(txtRecordID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addGap(31, 31, 31)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cmbDoctor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel13)
+                                .addComponent(jLabel5))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(txtDoctorID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(2, 2, 2))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtPatientName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
+                        .addGap(31, 31, 31)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtDoctorName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))))
+                .addGap(16, 16, 16)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -388,8 +540,8 @@ public class MedicalRecords extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -401,43 +553,80 @@ public class MedicalRecords extends javax.swing.JFrame {
 
     private void btnDISPLAYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDISPLAYActionPerformed
         
-        try{
-          Connection con = DatabaseConnection.getConnection();
-          
-          String sql = "SELECT * FROM MedicalRecords";
-          
-          PreparedStatement pst = con.prepareStatement(sql);
-          
-          ResultSet rs = pst.executeQuery();
-          
-          DefaultTableModel model = 
-                  (DefaultTableModel) tblMedicalRecords.getModel();
-          model.setRowCount(0);
-          
-          while(rs.next())
-          {
-              model.addRow(new Object[]
-              {
-                  rs.getObject(1),
-                  rs.getObject(2),
-                  rs.getObject(3),
-                  rs.getObject(4),
-                  rs.getObject(5),
-                  rs.getObject(6),
-                  rs.getObject(7),
-                  rs.getObject(8),
-                  rs.getObject(9),
-                  rs.getObject(10)
-              
-              });
-          }
-      }
-      catch(Exception e)
-      {
-          JOptionPane.showMessageDialog(this,
-                  "Error: "+ e.getMessage());
-          
-      }
+                                           
+
+    try {
+
+        Connection con =
+                DatabaseConnection.getConnection();
+
+
+        String sql =
+                "SELECT RecordID, PatientID, PatientName, "
+                + "DoctorID, DoctorName, Diagnosis, Treatment, "
+                + "Prescription, MedicalHistory, Allergies "
+                + "FROM MedicalRecords";
+
+
+        PreparedStatement pst =
+                con.prepareStatement(sql);
+
+
+        ResultSet rs =
+                pst.executeQuery();
+
+
+        DefaultTableModel model =
+                (DefaultTableModel)
+                tblMedicalRecords.getModel();
+
+
+        model.setRowCount(0);
+
+
+        while(rs.next()) {
+
+            model.addRow(new Object[]{
+
+                rs.getInt("RecordID"),
+
+                rs.getInt("PatientID"),
+
+                rs.getString("PatientName"),
+
+                rs.getInt("DoctorID"),
+
+                rs.getString("DoctorName"),
+
+                rs.getString("Diagnosis"),
+
+                rs.getString("Treatment"),
+
+                rs.getString("Prescription"),
+
+                rs.getString("MedicalHistory"),
+
+                rs.getString("Allergies")
+
+            });
+
+        }
+
+
+        rs.close();
+        pst.close();
+        con.close();
+
+
+    }
+    catch(Exception e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Error: " + e.getMessage());
+
+    }
+
+
        
         
       
@@ -445,31 +634,101 @@ public class MedicalRecords extends javax.swing.JFrame {
 
     private void btnDELETEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDELETEActionPerformed
         
-      try
-      {
-          Connection con = DatabaseConnection.getConnection();
-          
-          String sql =
-                  "DELETE FROM MedicalRecords WHERE RECORDID=?";
-          
-          PreparedStatement pst =
-                  con.prepareStatement(sql);
-          
-          pst.setInt(1,
-                  Integer.parseInt(txtRecordID.getText()));
-          
-          pst.executeUpdate();
-          
-          JOptionPane.showMessageDialog(this,
-                  "Record Deleted Successfully");
-      }
-      catch(Exception e)
-      {
-          JOptionPane.showMessageDialog(this,
-                  "Error : " + e.getMessage());
-      }
-        
-       
+                                       
+
+    if(txtRecordID.getText().trim().isEmpty()) {
+
+        JOptionPane.showMessageDialog(this,
+                "Please enter Record ID.");
+
+        return;
+    }
+
+
+    int choice =
+            JOptionPane.showConfirmDialog(
+                    this,
+                    "Are you sure you want to delete this Medical Record?",
+                    "Confirm Delete",
+                    JOptionPane.YES_NO_OPTION);
+
+
+    if(choice != JOptionPane.YES_OPTION) {
+
+        return;
+    }
+
+
+    try {
+
+        Connection con =
+                DatabaseConnection.getConnection();
+
+
+        String sql =
+                "DELETE FROM MedicalRecords WHERE RecordID=?";
+
+
+        PreparedStatement pst =
+                con.prepareStatement(sql);
+
+
+        pst.setInt(1,
+                Integer.parseInt(txtRecordID.getText()));
+
+
+        int rows =
+                pst.executeUpdate();
+
+
+        if(rows > 0) {
+
+            JOptionPane.showMessageDialog(this,
+                    "Medical Record Deleted Successfully!");
+
+
+            AuditLogger.log("Deleted Medical Record");
+
+
+            txtRecordID.setText("");
+            txtPatientID.setText("");
+            txtPatientName.setText("");
+            txtDoctorID.setText("");
+            txtDoctorName.setText("");
+            txtDiagnosis.setText("");
+            txtTreatment.setText("");
+            txtPrescription.setText("");
+            txtMedicalHistory.setText("");
+            txtAllergies.setText("");
+
+        }
+        else {
+
+            JOptionPane.showMessageDialog(this,
+                    "Medical Record Not Found!");
+
+        }
+
+
+        pst.close();
+        con.close();
+
+
+    }
+    catch(NumberFormatException e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Record ID must contain numbers only.");
+
+    }
+    catch(Exception e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Error: " + e.getMessage());
+
+    }
+
+
         
     }//GEN-LAST:event_btnDELETEActionPerformed
 
@@ -479,66 +738,103 @@ public class MedicalRecords extends javax.swing.JFrame {
 
     private void btnSAVEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSAVEActionPerformed
 
-try{
- Connection con = DatabaseConnection.getConnection();
-      
-      String sql = "INSERT INTO MedicalRecords "
-              +"(PatientID,PatientName,DoctorID,DoctorName,"
-              +"Diagnosis,Treatment,Prescription,"
-              +"MedicalHistory,Allergies)"
-              +" VALUES(?,?,?,?,?,?,?,?,?)";
-      
-      PreparedStatement pst = con.prepareStatement(sql);    
-      
-     pst.setInt(1,
-              Integer.parseInt(txtPatientID.getText()));
-       
-      pst.setString(2, 
-              txtPatientName.getText());
-      
-       pst.setInt(3, 
-             Integer.parseInt(txtDoctorID.getText()));
-       
-       pst.setString(4,
-              txtDoctorName.getText());
-      
-      pst.setString(5,
-             (txtDiagnosis.getText()));
-      
-      pst.setString(6,
-              txtMedicalHistory.getText());
-      
-      pst.setString(7,
-              txtTreatment.getText());
-      
-      pst.setString(8,
-              txtPrescription.getText());
-      
-      pst.setString(9,
-              txtAllergies.getText());
-      
-     
-      
-      pst.executeUpdate();
-      
-      JOptionPane.showMessageDialog(this,
-              "Medical Record Saved Successfully!");
-}
+                                      
 
-   
-  catch(Exception e)
-  {
-      JOptionPane.showMessageDialog(this,
-              "Error: " + e.getMessage());
-       
-  }
-        
-        
-        
-        
-        
-        
-        
+    if(txtPatientID.getText().trim().isEmpty()) {
+
+        JOptionPane.showMessageDialog(this,
+                "Please select a patient.");
+
+        return;
+    }
+
+
+    if(txtDoctorID.getText().trim().isEmpty()) {
+
+        JOptionPane.showMessageDialog(this,
+                "Please select a doctor.");
+
+        return;
+    }
+
+
+    try {
+
+        Connection con =
+                DatabaseConnection.getConnection();
+
+
+        String sql =
+                "INSERT INTO MedicalRecords "
+                + "(PatientID, PatientName, DoctorID, DoctorName, "
+                + "Diagnosis, Treatment, Prescription, "
+                + "MedicalHistory, Allergies) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+
+        PreparedStatement pst =
+                con.prepareStatement(sql);
+
+
+        pst.setInt(1,
+                Integer.parseInt(txtPatientID.getText()));
+
+
+        pst.setString(2,
+                txtPatientName.getText());
+
+
+        pst.setInt(3,
+                Integer.parseInt(txtDoctorID.getText()));
+
+
+        pst.setString(4,
+                txtDoctorName.getText());
+
+
+        pst.setString(5,
+                txtDiagnosis.getText());
+
+
+        pst.setString(6,
+                txtTreatment.getText());
+
+
+        pst.setString(7,
+                txtPrescription.getText());
+
+
+        pst.setString(8,
+                txtMedicalHistory.getText());
+
+
+        pst.setString(9,
+                txtAllergies.getText());
+
+
+        pst.executeUpdate();
+
+
+        JOptionPane.showMessageDialog(this,
+                "Medical Record Saved Successfully!");
+
+
+        AuditLogger.log("Added Medical Record");
+
+
+        pst.close();
+        con.close();
+
+
+    }
+    catch(Exception e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Error: " + e.getMessage());
+
+    }
+
+
         
         
         
@@ -566,49 +862,111 @@ try{
     }//GEN-LAST:event_btnSAVEActionPerformed
 
     private void btnSEARCHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSEARCHActionPerformed
-      
-      try{
-        Connection con = DatabaseConnection.getConnection();
-       String sql = "SELECT * FROM MedicalRecords WHERE RecordID =?";
-       
-       PreparedStatement pst = con.prepareStatement(sql);
-       
-       pst.setInt(1,
-               Integer.parseInt(txtRecordID.getText()));
-       
-       ResultSet rs = pst.executeQuery();
-       
-       if(rs.next())
-       {
-           txtPatientID.setText(rs.getString("PatientID"));
-           txtPatientName.setText(rs.getString("PatientName"));
-           txtDoctorID.setText(rs.getString("DoctorID"));
-           txtDoctorName.setText(rs.getString("DoctorName"));
-                   
-           txtDiagnosis.setText(rs.getString("Diagnosis"));
-           txtTreatment.setText(rs.getString("Treatment"));
-           txtPrescription.setText(rs.getString("Prescription"));
-           txtMedicalHistory.setText(rs.getString("MedicalHistory"));
-           txtAllergies.setText(rs.getString("Allergies"));
-       }
-       else
-       {
-            JOptionPane.showMessageDialog(this,
-                    "Record Not Found!");
-       } 
+                                            
+
+                                         
+
+    if(txtRecordID.getText().trim().isEmpty()) {
+
+        JOptionPane.showMessageDialog(this,
+                "Please enter Record ID.");
+
+        return;
     }
-    catch(Exception e)
-    {
+
+
+    try {
+
+        Connection con =
+                DatabaseConnection.getConnection();
+
+
+        String sql =
+                "SELECT * FROM MedicalRecords WHERE RecordID=?";
+
+
+        PreparedStatement pst =
+                con.prepareStatement(sql);
+
+
+        pst.setInt(1,
+                Integer.parseInt(txtRecordID.getText()));
+
+
+        ResultSet rs =
+                pst.executeQuery();
+
+
+        if(rs.next()) {
+
+            txtPatientID.setText(
+                    rs.getString("PatientID"));
+
+
+            txtPatientName.setText(
+                    rs.getString("PatientName"));
+
+
+            txtDoctorID.setText(
+                    rs.getString("DoctorID"));
+
+
+            txtDoctorName.setText(
+                    rs.getString("DoctorName"));
+
+
+            txtDiagnosis.setText(
+                    rs.getString("Diagnosis"));
+
+
+            txtTreatment.setText(
+                    rs.getString("Treatment"));
+
+
+            txtPrescription.setText(
+                    rs.getString("Prescription"));
+
+
+            txtMedicalHistory.setText(
+                    rs.getString("MedicalHistory"));
+
+
+            txtAllergies.setText(
+                    rs.getString("Allergies"));
+
+
+            JOptionPane.showMessageDialog(this,
+                    "Medical Record Found!");
+
+        }
+        else {
+
+            JOptionPane.showMessageDialog(this,
+                    "Medical Record Not Found!");
+
+        }
+
+
+        rs.close();
+        pst.close();
+        con.close();
+
+
+    }
+    catch(NumberFormatException e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Record ID must contain numbers only.");
+
+    }
+    catch(Exception e) {
+
         JOptionPane.showMessageDialog(this,
                 "Error: " + e.getMessage());
-    }    
-        
-        
-        
-        
-        
-        
-        
+
+    }
+
+
         
         
         
@@ -637,90 +995,160 @@ try{
     }//GEN-LAST:event_btnSEARCHActionPerformed
 
     private void btnUPDATEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUPDATEActionPerformed
-  try
-  {
-         Connection con = DatabaseConnection.getConnection();
-      
-      String sql = 
-              "UPDATE MedicalRecords SET "
-              +"PatientID=?,PatientName=?,"
-              +"DoctorID=?,DoctorName=?,"
-              +"Diagnosis=?,Treatment=?,"
-              +"Prescription=?,MedicalHistory=?,"
-              +"Allergies=? "
-              +"WHERE RecordID=?";
-      
-      PreparedStatement pst = 
-              con.prepareStatement(sql);    
-      
-     pst.setInt(1,
-              Integer.parseInt(txtPatientID.getText()));
-       
-      pst.setString(2, 
-              txtPatientName.getText());
-      
-       pst.setInt(3, 
-             Integer.parseInt(txtDoctorID.getText()));
-       
-       pst.setString(4,
-              txtDoctorName.getText());
-      
-      pst.setString(5,
-             (txtDiagnosis.getText()));
-      
-      pst.setString(6,
-              txtMedicalHistory.getText());
-      
-      pst.setString(7,
-              txtTreatment.getText());
-      
-      pst.setString(8,
-              txtPrescription.getText());
-      
-      pst.setString(9,
-              txtAllergies.getText());
-      
-      pst.setInt(10,
-              Integer.parseInt(txtRecordID.getText()));
-      
-      pst.executeUpdate();
-      
-      JOptionPane.showMessageDialog(this,
-              "Record Updated Successfully");
-    }
-    catch(Exception e)
-    {
+                                       
+
+                                          
+
+    if(txtRecordID.getText().trim().isEmpty()) {
+
         JOptionPane.showMessageDialog(this,
-                "Error : " + e.getMessage());
-    
-    
-    }  
+                "Please enter Record ID.");
+
+        return;
+    }
+
+
+    try {
+
+        Connection con =
+                DatabaseConnection.getConnection();
+
+
+        String sql =
+                "UPDATE MedicalRecords SET "
+                + "PatientID=?, "
+                + "PatientName=?, "
+                + "DoctorID=?, "
+                + "DoctorName=?, "
+                + "Diagnosis=?, "
+                + "Treatment=?, "
+                + "Prescription=?, "
+                + "MedicalHistory=?, "
+                + "Allergies=? "
+                + "WHERE RecordID=?";
+
+
+        PreparedStatement pst =
+                con.prepareStatement(sql);
+
+
+        pst.setInt(1,
+                Integer.parseInt(txtPatientID.getText()));
+
+
+        pst.setString(2,
+                txtPatientName.getText());
+
+
+        pst.setInt(3,
+                Integer.parseInt(txtDoctorID.getText()));
+
+
+        pst.setString(4,
+                txtDoctorName.getText());
+
+
+        pst.setString(5,
+                txtDiagnosis.getText());
+
+
+        pst.setString(6,
+                txtTreatment.getText());
+
+
+        pst.setString(7,
+                txtPrescription.getText());
+
+
+        pst.setString(8,
+                txtMedicalHistory.getText());
+
+
+        pst.setString(9,
+                txtAllergies.getText());
+
+
+        pst.setInt(10,
+                Integer.parseInt(txtRecordID.getText()));
+
+
+        int rows =
+                pst.executeUpdate();
+
+
+        if(rows > 0) {
+
+            JOptionPane.showMessageDialog(this,
+                    "Medical Record Updated Successfully!");
+
+
+            AuditLogger.log("Updated Medical Record");
+
+        }
+        else {
+
+            JOptionPane.showMessageDialog(this,
+                    "Medical Record Not Found!");
+
+        }
+
+
+        pst.close();
+        con.close();
+
+
+    }
+    catch(NumberFormatException e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Record ID, Patient ID and Doctor ID must contain numbers only.");
+
+    }
+    catch(Exception e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Error: " + e.getMessage());
+
+    }
+
+
+  
     }//GEN-LAST:event_btnUPDATEActionPerformed
 
     private void btnCLEARActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCLEARActionPerformed
-       
-       txtRecordID.setText("");
-       txtPatientID.setText("");
-       txtPatientName.setText("");
-       txtDoctorID.setText("");
-       txtDoctorName.setText("");
-       
-       txtDiagnosis.setText("");
-       txtTreatment.setText("");
-       txtPrescription.setText("");
-       txtMedicalHistory.setText("");
-       txtAllergies.setText("");
-        
+                                           
+
+    txtRecordID.setText("");
+
+    txtPatientID.setText("");
+
+    txtPatientName.setText("");
+
+    txtDoctorID.setText("");
+
+    txtDoctorName.setText("");
+
+    txtDiagnosis.setText("");
+
+    txtTreatment.setText("");
+
+    txtPrescription.setText("");
+
+    txtMedicalHistory.setText("");
+
+    txtAllergies.setText("");
+
+
+    txtRecordID.requestFocus();
+
+
         
       
     }//GEN-LAST:event_btnCLEARActionPerformed
 
     private void btnDASHBOARDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDASHBOARDActionPerformed
        
-        DASHBOARD db = new DASHBOARD();
-        db.setVisible(true);
-        this.dispose();
-        
+    this.dispose();
         
         
         
@@ -732,6 +1160,97 @@ try{
         
         
     }//GEN-LAST:event_btnDASHBOARDActionPerformed
+
+    private void cmbPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPatientActionPerformed
+
+     
+
+    if (cmbPatient.getSelectedItem() == null) {
+        return;
+    }
+
+    String selectedPatient = cmbPatient.getSelectedItem().toString();
+
+    String patientID = selectedPatient.split(" - ")[0];
+
+    try {
+
+        Connection con = DatabaseConnection.getConnection();
+
+        String sql = "SELECT PatientID, PatientName FROM Patients WHERE PatientID=?";
+
+        PreparedStatement pst = con.prepareStatement(sql);
+
+        pst.setInt(1, Integer.parseInt(patientID));
+
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) {
+
+            txtPatientID.setText(rs.getString("PatientID"));
+            txtPatientName.setText(rs.getString("PatientName"));
+
+        }
+
+        rs.close();
+        pst.close();
+        con.close();
+
+    } catch (Exception e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Patient Loading Error: " + e.getMessage());
+
+    }
+
+
+    }//GEN-LAST:event_cmbPatientActionPerformed
+
+    private void cmbDoctorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDoctorActionPerformed
+
+    
+
+    if (cmbDoctor.getSelectedItem() == null) {
+        return;
+    }
+
+    String selectedDoctor = cmbDoctor.getSelectedItem().toString();
+
+    String doctorID = selectedDoctor.split(" - ")[0];
+
+    try {
+
+        Connection con = DatabaseConnection.getConnection();
+
+        String sql = "SELECT DoctorID, DoctorName FROM Doctors WHERE DoctorID=?";
+
+        PreparedStatement pst = con.prepareStatement(sql);
+
+        pst.setInt(1, Integer.parseInt(doctorID));
+
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) {
+
+            txtDoctorID.setText(rs.getString("DoctorID"));
+            txtDoctorName.setText(rs.getString("DoctorName"));
+
+        }
+
+        rs.close();
+        pst.close();
+        con.close();
+
+    } catch (Exception e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Doctor Loading Error: " + e.getMessage());
+
+    }
+
+
+
+    }//GEN-LAST:event_cmbDoctorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -766,9 +1285,13 @@ try{
     private javax.swing.JButton btnSAVE;
     private javax.swing.JButton btnSEARCH;
     private javax.swing.JButton btnUPDATE;
+    private javax.swing.JComboBox<String> cmbDoctor;
+    private javax.swing.JComboBox<String> cmbPatient;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -780,6 +1303,7 @@ try{
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane6;

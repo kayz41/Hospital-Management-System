@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 
 /**
  *
@@ -23,9 +25,13 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form UserRoles
      */
-    public Login() {
-        initComponents();
-    }
+   public Login() {
+
+    initComponents();
+
+    txtUSERNAME.requestFocusInWindow();
+
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -49,6 +55,7 @@ public class Login extends javax.swing.JFrame {
         txtPASSWORD = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -63,19 +70,20 @@ public class Login extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(145, 145, 145)
+                .addGap(54, 54, 54)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(40, 40, 40)
+                .addContainerGap()
                 .addComponent(jLabel1)
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel3.setPreferredSize(new java.awt.Dimension(426, 47));
 
         btnLOGIN.setBackground(new java.awt.Color(102, 102, 102));
         btnLOGIN.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -103,23 +111,23 @@ public class Login extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
+                .addContainerGap()
                 .addComponent(btnLOGIN, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(80, 80, 80)
+                .addGap(40, 40, 40)
                 .addComponent(btnCLEAR, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(88, 88, 88)
+                .addGap(30, 30, 30)
                 .addComponent(btnEXIT, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(39, 39, 39)
+                .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnLOGIN)
+                    .addComponent(btnEXIT)
                     .addComponent(btnCLEAR)
-                    .addComponent(btnEXIT))
-                .addContainerGap(38, Short.MAX_VALUE))
+                    .addComponent(btnLOGIN))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -130,55 +138,63 @@ public class Login extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("PASSWORD");
 
+        txtUSERNAME.setBackground(new java.awt.Color(204, 204, 204));
+        txtUSERNAME.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         txtUSERNAME.addActionListener(this::txtUSERNAMEActionPerformed);
+
+        txtPASSWORD.setBackground(new java.awt.Color(204, 204, 204));
+        txtPASSWORD.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtPASSWORD.addActionListener(this::txtPASSWORDActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(56, 56, 56)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
                 .addGap(119, 119, 119)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtUSERNAME, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
-                    .addComponent(txtPASSWORD))
+                    .addComponent(txtUSERNAME)
+                    .addComponent(txtPASSWORD, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(53, 53, 53)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtUSERNAME, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 184, Short.MAX_VALUE)
+                .addGap(29, 29, 29)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtPASSWORD, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(173, 173, 173)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtUSERNAMEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUSERNAMEActionPerformed
@@ -187,57 +203,384 @@ public class Login extends javax.swing.JFrame {
 
     private void btnLOGINActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLOGINActionPerformed
        
-      try{
-            
-          Connection con = DatabaseConnection.getConnection();
-          String sql =
-          "SELECT * FROM Users WHERE Username=? AND Password=?";
-          
-          PreparedStatement pst =
-                  con.prepareStatement(sql);
-          
-          pst.setString(1,
-                  txtUSERNAME.getText());
-          
-          pst.setString(2,
-                  txtPASSWORD.getText());
-          
-          ResultSet rs = pst.executeQuery();
-          
-          if(rs.next())
-          {
-              UserSession.username = rs.getString("Username");
-              UserSession.role = rs.getString("Role");
-              
-              Login.loggedRole = UserSession.role;
-              Login.loggedUsername = UserSession.username;
-              System.out.println("Role saved: " + Login.loggedRole);
-              
-              AuditLogger.log("User Logged In");
-             
-              JOptionPane.showMessageDialog(this,
-                      "Login Successful");
-              
-              DASHBOARD db = new DASHBOARD();
-             
-      
-              db.setVisible(true);
-              this.dispose();
-          }
-          else
-          {
-              JOptionPane.showMessageDialog(this,
-                      "Invalid Username or Password");
-          }
-      }
-      catch(Exception e)
-      {
-          JOptionPane.showMessageDialog(this,
-                  "Error : " + e.getMessage());
-      }
-    
-          
-        
+
+
+
+
+    try {
+
+        String username =
+                txtUSERNAME
+                        .getText()
+                        .trim();
+
+
+        String password =
+                new String(
+                        txtPASSWORD
+                                .getPassword());
+
+
+        /*
+         * =====================================
+         * BASIC VALIDATION
+         * =====================================
+         */
+
+        if (username.isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter Username.");
+
+            txtUSERNAME.requestFocusInWindow();
+
+            return;
+        }
+
+
+        if (password.isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter Password.");
+
+            txtPASSWORD.requestFocusInWindow();
+
+            return;
+        }
+
+
+        Connection con =
+                DatabaseConnection.getConnection();
+
+
+        /*
+         * =====================================
+         * FIND USER
+         * =====================================
+         */
+
+        String sql =
+                "SELECT UserID, Username, Password, "
+              + "Role, FailedAttempts, AccountLocked "
+              + "FROM Users "
+              + "WHERE Username=?";
+
+
+        PreparedStatement pst =
+                con.prepareStatement(sql);
+
+
+        pst.setString(
+                1,
+                username);
+
+
+        ResultSet rs =
+                pst.executeQuery();
+
+
+        /*
+         * =====================================
+         * USER NOT FOUND
+         * =====================================
+         */
+
+        if (!rs.next()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Invalid Username or Password.");
+
+            rs.close();
+            pst.close();
+            con.close();
+
+            return;
+        }
+
+
+        int userID =
+                rs.getInt("UserID");
+
+
+        String storedUsername =
+                rs.getString("Username");
+
+
+        String storedPassword =
+                rs.getString("Password");
+
+
+        String role =
+                rs.getString("Role");
+
+
+        int failedAttempts =
+                rs.getInt("FailedAttempts");
+
+
+        boolean accountLocked =
+                rs.getBoolean("AccountLocked");
+
+
+        /*
+         * =====================================
+         * CHECK ACCOUNT LOCK
+         * =====================================
+         */
+
+        if (accountLocked) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "This account is locked because "
+                  + "of too many failed login attempts.\n\n"
+                  + "Please contact an administrator.",
+                    "Account Locked",
+                    JOptionPane.WARNING_MESSAGE);
+
+
+            rs.close();
+            pst.close();
+            con.close();
+
+            return;
+        }
+
+
+        /*
+         * =====================================
+         * CHECK PASSWORD
+         * =====================================
+         */
+
+        boolean passwordCorrect =
+                BCrypt.checkpw(
+                        password,
+                        storedPassword);
+
+
+        /*
+         * =====================================
+         * SUCCESSFUL LOGIN
+         * =====================================
+ */
+
+        if (passwordCorrect) {
+
+            String resetSQL =
+                    "UPDATE Users "
+                  + "SET FailedAttempts=0, "
+                  + "AccountLocked=0 "
+                  + "WHERE UserID=?";
+
+
+            PreparedStatement resetPst =
+                    con.prepareStatement(
+                            resetSQL);
+
+
+            resetPst.setInt(
+                    1,
+                    userID);
+
+
+            resetPst.executeUpdate();
+
+
+            resetPst.close();
+
+
+            /*
+             * Save session information.
+             */
+
+           UserSession.startSession(
+        storedUsername,
+        role);
+
+
+            Login.loggedRole =
+                    UserSession.role;
+
+            Login.loggedUsername =
+                    UserSession.username;
+
+
+            System.out.println(
+                    "Role saved: "
+                    + Login.loggedRole);
+
+
+            /*
+             * Audit successful login.
+             */
+
+            AuditLogger.log(
+                    "User Logged In: "
+                    + storedUsername);
+
+
+            /*
+             * Open dashboard.
+             */
+
+            DASHBOARD db =
+                    new DASHBOARD();
+
+
+            /*
+             * Start the 15-minute
+             * inactivity session timer.
+             */
+
+            SessionManager.startSession(db);
+
+
+            db.setVisible(true);
+
+
+            rs.close();
+            pst.close();
+            con.close();
+
+
+            this.dispose();
+
+        }
+
+        else {
+
+            /*
+             * =================================
+             * FAILED LOGIN
+             * =================================
+             */
+
+            int newFailedAttempts =
+                    failedAttempts + 1;
+
+
+            /*
+             * Lock account after
+             * 5 failed attempts.
+             */
+
+            if (newFailedAttempts >= 5) {
+
+                String lockSQL =
+                        "UPDATE Users "
+                      + "SET FailedAttempts=?, "
+                      + "AccountLocked=1 "
+                      + "WHERE UserID=?";
+
+
+                PreparedStatement lockPst =
+                        con.prepareStatement(
+                                lockSQL);
+
+
+                lockPst.setInt(
+                        1,
+                        newFailedAttempts);
+
+                lockPst.setInt(
+                        2,
+                        userID);
+
+
+                lockPst.executeUpdate();
+
+
+                lockPst.close();
+
+
+                AuditLogger.log(
+                        "Account Locked: "
+                        + storedUsername);
+
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Too many failed login attempts.\n\n"
+                      + "This account has been locked.\n"
+                      + "Please contact an administrator.",
+                        "Account Locked",
+                        JOptionPane.WARNING_MESSAGE);
+
+            }
+
+            else {
+
+                String failedSQL =
+                        "UPDATE Users "
+                      + "SET FailedAttempts=? "
+                      + "WHERE UserID=?";
+
+
+                PreparedStatement failedPst =
+                        con.prepareStatement(
+                                failedSQL);
+
+
+                failedPst.setInt(
+                        1,
+                        newFailedAttempts);
+
+                failedPst.setInt(
+                        2,
+                        userID);
+
+
+                failedPst.executeUpdate();
+
+
+                failedPst.close();
+
+
+                int remainingAttempts =
+                        5 - newFailedAttempts;
+
+
+                AuditLogger.log(
+                        "Failed Login Attempt: "
+                        + storedUsername);
+
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Invalid Username or Password.\n\n"
+                      + "Remaining attempts: "
+                      + remainingAttempts,
+                        "Login Failed",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+
+
+            rs.close();
+            pst.close();
+            con.close();
+        }
+
+    }
+
+    catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Login Error:\n"
+              + e.getMessage(),
+                "Login Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+
+
+
         
     
     }//GEN-LAST:event_btnLOGINActionPerformed
@@ -255,6 +598,16 @@ public class Login extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_btnEXITActionPerformed
+
+    private void txtPASSWORDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPASSWORDActionPerformed
+
+
+    btnLOGIN.doClick();
+
+
+
+
+    }//GEN-LAST:event_txtPASSWORDActionPerformed
 
     /**
      * @param args the command line arguments

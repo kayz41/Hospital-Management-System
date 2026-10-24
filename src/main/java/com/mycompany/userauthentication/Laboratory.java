@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import com.mycompany.userauthentication.dao.LaboratoryDAO;
 
 /**
  *
@@ -15,14 +16,202 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Laboratory extends javax.swing.JFrame {
     
+    String patientPhone = "";
+String patientEmail = "";
+
+
+LaboratoryDAO dao = new LaboratoryDAO();
+
+String patientName = "";
+
+String doctorName = "";
+
+
+
+
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Laboratory.class.getName());
+    
+    
+    
+    
+    
+    
+    
+   private void loadPatients() {
+
+    try {
+
+        dao.loadPatients(cmbPatient);
+
+    }
+
+    catch (Exception e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Patient Loading Error:\n"
+                + e.getMessage(),
+                "Patient Loading Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+}
+    
+    
+    
+    
+private void loadLaboratoryRecords() {
+
+    try {
+
+        DefaultTableModel model =
+                (DefaultTableModel)
+                tblLaboratory.getModel();
+
+        model.setRowCount(0);
+
+
+        ResultSet rs =
+                dao.getAllLaboratoryRecords();
+
+
+        while (rs.next()) {
+
+            model.addRow(
+                    new Object[]{
+
+                        rs.getInt("TestID"),
+
+                        rs.getInt("PatientID"),
+
+                        rs.getString(
+                                "PatientName"),
+
+                        rs.getInt("DoctorID"),
+
+                        rs.getString(
+                                "DoctorName"),
+
+                        rs.getString(
+                                "TestName"),
+
+                        rs.getString(
+                                "Result"),
+
+                        rs.getString(
+                                "TestDate")
+                    });
+        }
+
+
+        rs.getStatement()
+                .getConnection()
+                .close();
+
+    }
+
+    catch (Exception e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Display Error:\n"
+                + e.getMessage(),
+                "Laboratory Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    private void loadDoctors() {
+
+    try {
+
+        dao.loadDoctors(cmbDoctor);
+
+    }
+
+    catch (Exception e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Doctor Loading Error:\n"
+                + e.getMessage(),
+                "Doctor Loading Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+}    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     /**
      * Creates new form Laboratory
      */
-    public Laboratory() {
-        initComponents();
-    }
+   public Laboratory() {
+
+    initComponents();
+
+    loadPatients();
+
+    loadDoctors();
+
+    loadLaboratoryRecords();
+
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -38,6 +227,12 @@ public class Laboratory extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         btnDASHBOARD = new javax.swing.JButton();
+        btnCLEAR = new javax.swing.JButton();
+        btnDISPLAY = new javax.swing.JButton();
+        btnSEARCH = new javax.swing.JButton();
+        btnDELETE = new javax.swing.JButton();
+        btnUPDATE = new javax.swing.JButton();
+        btnSAVE = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -56,12 +251,10 @@ public class Laboratory extends javax.swing.JFrame {
         txtTestDate = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblLaboratory = new javax.swing.JTable();
-        btnSAVE = new javax.swing.JButton();
-        btnUPDATE = new javax.swing.JButton();
-        btnDELETE = new javax.swing.JButton();
-        btnSEARCH = new javax.swing.JButton();
-        btnDISPLAY = new javax.swing.JButton();
-        btnCLEAR = new javax.swing.JButton();
+        jLabel11 = new javax.swing.JLabel();
+        cmbPatient = new javax.swing.JComboBox<>();
+        jLabel12 = new javax.swing.JLabel();
+        cmbDoctor = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -69,7 +262,8 @@ public class Laboratory extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(102, 102, 102));
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("LABORATORY MANAGEMENT");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -77,16 +271,16 @@ public class Laboratory extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(354, 354, 354)
-                .addComponent(jLabel9)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(281, 281, 281)
+                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(345, 345, 345))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(42, 42, 42)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(47, Short.MAX_VALUE)
                 .addComponent(jLabel9)
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addGap(37, 37, 37))
         );
 
         jPanel3.setBackground(new java.awt.Color(102, 102, 102));
@@ -98,22 +292,95 @@ public class Laboratory extends javax.swing.JFrame {
         btnDASHBOARD.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         btnDASHBOARD.addActionListener(this::btnDASHBOARDActionPerformed);
 
+        btnCLEAR.setBackground(new java.awt.Color(102, 102, 102));
+        btnCLEAR.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnCLEAR.setForeground(new java.awt.Color(255, 255, 255));
+        btnCLEAR.setText("CLEAR");
+        btnCLEAR.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnCLEAR.setFocusPainted(false);
+        btnCLEAR.addActionListener(this::btnCLEARActionPerformed);
+
+        btnDISPLAY.setBackground(new java.awt.Color(102, 102, 102));
+        btnDISPLAY.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnDISPLAY.setForeground(new java.awt.Color(255, 255, 255));
+        btnDISPLAY.setText("DISPLAY");
+        btnDISPLAY.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnDISPLAY.setFocusPainted(false);
+        btnDISPLAY.addActionListener(this::btnDISPLAYActionPerformed);
+
+        btnSEARCH.setBackground(new java.awt.Color(102, 102, 102));
+        btnSEARCH.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnSEARCH.setForeground(new java.awt.Color(255, 255, 255));
+        btnSEARCH.setText("SEARCH");
+        btnSEARCH.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnSEARCH.setFocusPainted(false);
+        btnSEARCH.addActionListener(this::btnSEARCHActionPerformed);
+
+        btnDELETE.setBackground(new java.awt.Color(102, 102, 102));
+        btnDELETE.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnDELETE.setForeground(new java.awt.Color(255, 255, 255));
+        btnDELETE.setText("DELETE");
+        btnDELETE.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnDELETE.setFocusPainted(false);
+        btnDELETE.addActionListener(this::btnDELETEActionPerformed);
+
+        btnUPDATE.setBackground(new java.awt.Color(102, 102, 102));
+        btnUPDATE.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnUPDATE.setForeground(new java.awt.Color(255, 255, 255));
+        btnUPDATE.setText("UPDATE");
+        btnUPDATE.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnUPDATE.setFocusPainted(false);
+        btnUPDATE.addActionListener(this::btnUPDATEActionPerformed);
+
+        btnSAVE.setBackground(new java.awt.Color(102, 102, 102));
+        btnSAVE.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnSAVE.setForeground(new java.awt.Color(255, 255, 255));
+        btnSAVE.setText("SAVE");
+        btnSAVE.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnSAVE.setFocusPainted(false);
+        btnSAVE.addActionListener(this::btnSAVEActionPerformed);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnDASHBOARD, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap()
+                .addComponent(btnSAVE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnUPDATE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(29, 29, 29)
+                .addComponent(btnDELETE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(29, 29, 29)
+                .addComponent(btnSEARCH, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(29, 29, 29)
+                .addComponent(btnDISPLAY, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(29, 29, 29)
+                .addComponent(btnCLEAR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(46, 46, 46)
+                .addComponent(btnDASHBOARD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(37, 37, 37))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(btnDASHBOARD, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnSAVE)
+                            .addComponent(btnUPDATE)
+                            .addComponent(btnDELETE)
+                            .addComponent(btnSEARCH)
+                            .addComponent(btnDISPLAY)
+                            .addComponent(btnCLEAR))
+                        .addGap(28, 28, 28))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(btnDASHBOARD, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27))))
         );
+
+        jPanel3Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCLEAR, btnDELETE, btnDISPLAY, btnSAVE, btnSEARCH, btnUPDATE});
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -149,66 +416,47 @@ public class Laboratory extends javax.swing.JFrame {
 
         txtTestID.addActionListener(this::txtTestIDActionPerformed);
 
+        jScrollPane1.setBackground(new java.awt.Color(153, 153, 153));
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        tblLaboratory.setBackground(new java.awt.Color(204, 204, 204));
         tblLaboratory.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "TestID", "PatientID", "PatientName", "DoctorID", "DoctorName", "TestName", "Result", "TestDate"
+                "TestID", "PatientName", "DoctorID", "DoctorName", "Testname", "Result"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblLaboratory.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblLaboratoryMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblLaboratory);
 
-        btnSAVE.setBackground(new java.awt.Color(102, 102, 102));
-        btnSAVE.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnSAVE.setForeground(new java.awt.Color(255, 255, 255));
-        btnSAVE.setText("SAVE");
-        btnSAVE.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnSAVE.setFocusPainted(false);
-        btnSAVE.addActionListener(this::btnSAVEActionPerformed);
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("Patient");
 
-        btnUPDATE.setBackground(new java.awt.Color(102, 102, 102));
-        btnUPDATE.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnUPDATE.setForeground(new java.awt.Color(255, 255, 255));
-        btnUPDATE.setText("UPDATE");
-        btnUPDATE.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnUPDATE.setFocusPainted(false);
-        btnUPDATE.addActionListener(this::btnUPDATEActionPerformed);
+        cmbPatient.addActionListener(this::cmbPatientActionPerformed);
 
-        btnDELETE.setBackground(new java.awt.Color(102, 102, 102));
-        btnDELETE.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnDELETE.setForeground(new java.awt.Color(255, 255, 255));
-        btnDELETE.setText("DELETE");
-        btnDELETE.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnDELETE.setFocusPainted(false);
-        btnDELETE.addActionListener(this::btnDELETEActionPerformed);
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setText("Doctor");
 
-        btnSEARCH.setBackground(new java.awt.Color(102, 102, 102));
-        btnSEARCH.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnSEARCH.setForeground(new java.awt.Color(255, 255, 255));
-        btnSEARCH.setText("SEARCH");
-        btnSEARCH.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnSEARCH.setFocusPainted(false);
-        btnSEARCH.addActionListener(this::btnSEARCHActionPerformed);
-
-        btnDISPLAY.setBackground(new java.awt.Color(102, 102, 102));
-        btnDISPLAY.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnDISPLAY.setForeground(new java.awt.Color(255, 255, 255));
-        btnDISPLAY.setText("DISPLAY");
-        btnDISPLAY.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnDISPLAY.setFocusPainted(false);
-        btnDISPLAY.addActionListener(this::btnDISPLAYActionPerformed);
-
-        btnCLEAR.setBackground(new java.awt.Color(102, 102, 102));
-        btnCLEAR.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnCLEAR.setForeground(new java.awt.Color(255, 255, 255));
-        btnCLEAR.setText("CLEAR");
-        btnCLEAR.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnCLEAR.setFocusPainted(false);
-        btnCLEAR.addActionListener(this::btnCLEARActionPerformed);
+        cmbDoctor.addActionListener(this::cmbDoctorActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -219,94 +467,113 @@ public class Laboratory extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtResult, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel1)
-                                    .addGap(37, 37, 37)
-                                    .addComponent(txtTestID, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel6)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(txtTestName, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(91, 91, 91)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel4))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtTestDate)
-                            .addComponent(txtDoctorID)
-                            .addComponent(txtPatientID, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(75, 75, 75)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel7)
+                                        .addGap(39, 39, 39)
+                                        .addComponent(txtResult))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(txtTestName)))
+                                .addGap(93, 93, 93))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel11)
+                                        .addGap(32, 32, 32))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel12)
+                                        .addGap(35, 35, 35)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cmbDoctor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cmbPatient, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel4))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtTestDate)
+                                    .addComponent(txtDoctorID))
+                                .addGap(1, 1, 1))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(37, 37, 37)
+                                .addComponent(txtTestID)))
+                        .addGap(124, 124, 124)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel2)
+                                .addComponent(jLabel5)))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtDoctorName)
-                            .addComponent(txtPatientName, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 114, Short.MAX_VALUE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtDoctorName, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtPatientName, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtPatientID))
+                        .addGap(114, 114, 114))
+                    .addComponent(jScrollPane1))
                 .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(115, 115, 115)
-                .addComponent(btnSAVE, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addComponent(btnUPDATE, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addComponent(btnDELETE, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addComponent(btnSEARCH, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addComponent(btnDISPLAY, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addComponent(btnCLEAR, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtTestID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtPatientID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtPatientName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(34, 34, 34)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtDoctorID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDoctorName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtTestName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5))
-                .addGap(45, 45, 45)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(txtPatientID))
+                                .addGap(34, 34, 34)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtDoctorName)
+                                    .addComponent(jLabel5))
+                                .addGap(45, 45, 45))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(cmbPatient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel11))
+                                .addGap(34, 34, 34)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(cmbDoctor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel12))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtTestName)
+                                .addComponent(jLabel6))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel3)
+                                .addComponent(txtPatientName)))
+                        .addGap(22, 22, 22))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(txtTestID))
+                        .addGap(34, 34, 34)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtDoctorID)
+                            .addComponent(jLabel4))
+                        .addGap(45, 45, 45)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(txtTestDate))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(txtResult, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(txtTestDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(42, 42, 42)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSAVE)
-                    .addComponent(btnUPDATE)
-                    .addComponent(btnDELETE)
-                    .addComponent(btnSEARCH)
-                    .addComponent(btnDISPLAY)
-                    .addComponent(btnCLEAR))
+                    .addComponent(txtResult))
                 .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -330,251 +597,626 @@ public class Laboratory extends javax.swing.JFrame {
 
     private void btnSAVEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSAVEActionPerformed
 
-        try{
-            Connection con = DatabaseConnection.getConnection();
+    
+    try {
 
-            String sql = "INSERT INTO Laboratory (PatientID,PatientName,DoctorID,DoctorName,TestName,Result,TestDate)"
-            
-                         +" VALUES(?,?,?,?,?,?,?)";
+        if (cmbPatient.getSelectedItem() == null) {
 
-            PreparedStatement pst = con.prepareStatement(sql);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a patient.");
 
-            pst.setInt(1,
-                Integer.parseInt(txtPatientID.getText()));
+            return;
+        }
 
-            pst.setString(2,
-                txtPatientName.getText());
 
-            pst.setInt(3,
-                Integer.parseInt(txtDoctorID.getText()));
+        if (cmbDoctor.getSelectedItem() == null) {
 
-            pst.setString(4,
-                txtDoctorName.getText());
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a doctor.");
 
-            pst.setString(5,
-                (txtTestName.getText()));
+            return;
+        }
 
-            pst.setString(6,
-                txtResult.getText());
 
-            pst.setString(7,
-                txtTestDate.getText());
-            
-            pst.executeUpdate();
+        if (txtTestName.getText().trim().isEmpty()) {
 
-           
-            JOptionPane.showMessageDialog(this,
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter Test Name.");
+
+            txtTestName.requestFocusInWindow();
+
+            return;
+        }
+
+
+        String patient =
+                cmbPatient
+                        .getSelectedItem()
+                        .toString();
+
+
+        String doctor =
+                cmbDoctor
+                        .getSelectedItem()
+                        .toString();
+
+
+        String[] patientParts =
+                patient.split(" - ", 2);
+
+
+        String[] doctorParts =
+                doctor.split(" - ", 2);
+
+
+        LaboratoryModel model =
+                new LaboratoryModel();
+
+
+        model.setPatientID(
+                Integer.parseInt(
+                        patientParts[0]));
+
+
+        model.setPatientName(
+                patientParts[1]);
+
+
+        model.setDoctorID(
+                Integer.parseInt(
+                        doctorParts[0]));
+
+
+        model.setDoctorName(
+                doctorParts[1]);
+
+
+        model.setTestName(
+                txtTestName
+                        .getText()
+                        .trim());
+
+
+        model.setResult(
+                txtResult
+                        .getText()
+                        .trim());
+
+
+        model.setTestDate(
+                txtTestDate
+                        .getText()
+                        .trim());
+
+
+        dao.saveLaboratoryRecord(model);
+
+
+        loadLaboratoryRecords();
+
+
+        JOptionPane.showMessageDialog(
+                this,
                 "Laboratory Record Saved Successfully!");
-            
-            AuditLogger.log("Added Laboratory");
-      
-        }
 
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(this,
-                "Error: " + e.getMessage());
 
-        }
+        AuditLogger.log(
+                "Added Laboratory Record");
+
+    }
+
+    catch (NumberFormatException e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Patient ID or Doctor ID is invalid.",
+                "Validation Error",
+                JOptionPane.WARNING_MESSAGE);
+
+    }
+
+    catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Save Error:\n"
+                + e.getMessage(),
+                "Save Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+
 
     }//GEN-LAST:event_btnSAVEActionPerformed
 
     private void btnUPDATEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUPDATEActionPerformed
-        try
-        {
-            Connection con = DatabaseConnection.getConnection();
+                                          
 
-            String sql =
-            "UPDATE Laboratory SET "
-            +"PatientID=?,PatientName=?,"
-            +"DoctorID=?,DoctorName=?,"
-            +"TestName=?,Result=?, TestDate=? "
-            +"WHERE TestID=?";
 
-            PreparedStatement pst =
-            con.prepareStatement(sql);
+    try {
 
-            pst.setInt(1,
-                Integer.parseInt(txtPatientID.getText()));
+        if (txtTestID.getText().trim().isEmpty()) {
 
-            pst.setString(2,
-                txtPatientName.getText());
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a laboratory record first.");
 
-            pst.setInt(3,
-                Integer.parseInt(txtDoctorID.getText()));
-
-            pst.setString(4,
-                txtDoctorName.getText());
-
-            pst.setString(5,
-                (txtTestName.getText()));
-
-            pst.setString(6,
-                txtResult.getText());
-
-            pst.setString(7,
-                txtTestDate.getText());
-
-            pst.setInt(8,
-                Integer.parseInt(txtTestID.getText()));
-
-           
-
-            pst.executeUpdate();
-
-            JOptionPane.showMessageDialog(this,
-                "Record Updated Successfully");
-            
-            AuditLogger.log("Updated Laboratory Record");
+            return;
         }
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(this,
-                "Error : " + e.getMessage());
 
+
+        if (txtPatientID.getText().trim().isEmpty()
+                || txtDoctorID.getText().trim().isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Patient and Doctor information is required.");
+
+            return;
         }
+
+
+        LaboratoryModel model =
+                new LaboratoryModel();
+
+
+        model.setTestID(
+                Integer.parseInt(
+                        txtTestID
+                                .getText()
+                                .trim()));
+
+
+        model.setPatientID(
+                Integer.parseInt(
+                        txtPatientID
+                                .getText()
+                                .trim()));
+
+
+        model.setPatientName(
+                txtPatientName
+                        .getText()
+                        .trim());
+
+
+        model.setDoctorID(
+                Integer.parseInt(
+                        txtDoctorID
+                                .getText()
+                                .trim()));
+
+
+        model.setDoctorName(
+                txtDoctorName
+                        .getText()
+                        .trim());
+
+
+        model.setTestName(
+                txtTestName
+                        .getText()
+                        .trim());
+
+
+        model.setResult(
+                txtResult
+                        .getText()
+                        .trim());
+
+
+        model.setTestDate(
+                txtTestDate
+                        .getText()
+                        .trim());
+
+
+        dao.updateLaboratoryRecord(model);
+
+
+        loadLaboratoryRecords();
+
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Laboratory Record Updated Successfully!");
+
+
+        AuditLogger.log(
+                "Updated Laboratory Record");
+
+    }
+
+    catch (NumberFormatException e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Test ID, Patient ID and Doctor ID "
+                + "must contain numbers only.",
+                "Validation Error",
+                JOptionPane.WARNING_MESSAGE);
+
+    }
+
+    catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Update Error:\n"
+                + e.getMessage(),
+                "Update Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+
+
     }//GEN-LAST:event_btnUPDATEActionPerformed
 
     private void btnDELETEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDELETEActionPerformed
-            int confirm = JOptionPane.showConfirmDialog(
-            this,
-                    "Are you sure want to delete this record?",
-                    "Confirm Deletion",
-                    JOptionPane.YES_NO_OPTION
-           );
-                    if (confirm ==JOptionPane.YES_OPTION){
-        try
-        {
-            Connection con = DatabaseConnection.getConnection();
+                                                    
 
-            String sql =
-            "DELETE FROM Laboratory WHERE TestID=?";
 
-            PreparedStatement pst =
-            con.prepareStatement(sql);
+    try {
 
-            pst.setInt(1,
-                Integer.parseInt(txtTestID.getText()));
+        if (txtTestID.getText().trim().isEmpty()) {
 
-            pst.executeUpdate();
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a laboratory record first.");
 
-            JOptionPane.showMessageDialog(this,
-                "Laboratory Record Deleted Successfully");
-            
-            AuditLogger.log("Deleted Laboratory Record");
-        }
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(this,
-                "Error : " + e.getMessage());
-        }
-                    }
-
-    }//GEN-LAST:event_btnDELETEActionPerformed
-
-    private void btnSEARCHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSEARCHActionPerformed
-
-        try{
-            Connection con = DatabaseConnection.getConnection();
-            String sql = "SELECT * FROM Laboratory WHERE TestID =?";
-
-            PreparedStatement pst = con.prepareStatement(sql);
-
-            pst.setInt(1,
-                Integer.parseInt(txtTestID.getText()));
-
-            ResultSet rs = pst.executeQuery();
-
-            if(rs.next())
-            {
-                txtPatientID.setText(rs.getString("PatientID"));
-                txtPatientName.setText(rs.getString("PatientName"));
-                txtDoctorID.setText(rs.getString("DoctorID"));
-                txtDoctorName.setText(rs.getString("DoctorName"));
-
-                txtTestName.setText(rs.getString("TestName"));
-                txtResult.setText(rs.getString("Result"));
-                txtTestDate.setText(rs.getString("TestDate"));
-                
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(this,
-                    "Record Not Found!");
-            }
-        }
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(this,
-                "Error: " + e.getMessage());
+            return;
         }
 
-    }//GEN-LAST:event_btnSEARCHActionPerformed
 
-    private void btnDISPLAYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDISPLAYActionPerformed
+        int testID =
+                Integer.parseInt(
+                        txtTestID
+                                .getText()
+                                .trim());
 
-        try{
-            Connection con = DatabaseConnection.getConnection();
 
-            String sql = "SELECT * FROM Laboratory";
+        int choice =
+                JOptionPane.showConfirmDialog(
+                        this,
+                        "Are you sure you want to delete "
+                        + "this laboratory record?",
+                        "Confirm Delete",
+                        JOptionPane.YES_NO_OPTION);
 
-            PreparedStatement pst = con.prepareStatement(sql);
 
-            ResultSet rs = pst.executeQuery();
+        if (choice != JOptionPane.YES_OPTION) {
 
-            DefaultTableModel model =
-            (DefaultTableModel) tblLaboratory.getModel();
-            model.setRowCount(0);
+            return;
+        }
 
-            while(rs.next())
-            {
-                model.addRow(new Object[]
-                    {
-                        rs.getObject(1),
-                        rs.getObject(2),
-                        rs.getObject(3),
-                        rs.getObject(4),
-                        rs.getObject(5),
-                        rs.getObject(6),
-                        rs.getObject(7),
-                        rs.getObject(8)
-                       
 
-                    });
-                }
-            }
-            catch(Exception e)
-            {
-                JOptionPane.showMessageDialog(this,
-                    "Error: "+ e.getMessage());
+        dao.deleteLaboratoryRecord(testID);
 
-            }
 
-    }//GEN-LAST:event_btnDISPLAYActionPerformed
+        loadLaboratoryRecords();
 
-    private void btnCLEARActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCLEARActionPerformed
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Laboratory Record Deleted Successfully!");
+
+
+        AuditLogger.log(
+                "Deleted Laboratory Record");
+
 
         txtTestID.setText("");
         txtPatientID.setText("");
         txtPatientName.setText("");
         txtDoctorID.setText("");
         txtDoctorName.setText("");
-
         txtTestName.setText("");
         txtResult.setText("");
         txtTestDate.setText("");
-        
+
+    }
+
+    catch (NumberFormatException e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Test ID must contain numbers only.",
+                "Validation Error",
+                JOptionPane.WARNING_MESSAGE);
+
+    }
+
+    catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Delete Error:\n"
+                + e.getMessage(),
+                "Delete Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+    }//GEN-LAST:event_btnDELETEActionPerformed
+
+    private void btnSEARCHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSEARCHActionPerformed
+                                         
+
+ 
+    try {
+
+        String keyword =
+                txtPatientName
+                        .getText()
+                        .trim();
+
+
+        if (keyword.isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Enter Patient Name, Doctor Name "
+                    + "or Test Name to search.");
+
+            txtPatientName.requestFocusInWindow();
+
+            return;
+        }
+
+
+        DefaultTableModel model =
+                (DefaultTableModel)
+                tblLaboratory.getModel();
+
+
+        model.setRowCount(0);
+
+
+        ResultSet rs =
+                dao.searchLaboratoryRecord(
+                        keyword);
+
+
+        while (rs.next()) {
+
+            model.addRow(
+                    new Object[]{
+
+                        rs.getInt("TestID"),
+
+                        rs.getInt("PatientID"),
+
+                        rs.getString(
+                                "PatientName"),
+
+                        rs.getInt("DoctorID"),
+
+                        rs.getString(
+                                "DoctorName"),
+
+                        rs.getString(
+                                "TestName"),
+
+                        rs.getString(
+                                "Result"),
+
+                        rs.getString(
+                                "TestDate")
+                    });
+        }
+
+
+        rs.getStatement()
+                .getConnection()
+                .close();
+
+    }
+
+    catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Search Error:\n"
+                + e.getMessage(),
+                "Search Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+
+    }//GEN-LAST:event_btnSEARCHActionPerformed
+
+    private void btnDISPLAYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDISPLAYActionPerformed
+
+                                           
+
+
+    loadLaboratoryRecords();
+
+
+
+
+
+    }//GEN-LAST:event_btnDISPLAYActionPerformed
+
+    private void btnCLEARActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCLEARActionPerformed
+
+ 
+
+    txtTestID.setText("");
+
+    txtPatientID.setText("");
+
+    txtPatientName.setText("");
+
+    txtDoctorID.setText("");
+
+    txtDoctorName.setText("");
+
+    txtTestName.setText("");
+
+    txtResult.setText("");
+
+    txtTestDate.setText("");
+
+
+    cmbPatient.setSelectedIndex(-1);
+
+    cmbDoctor.setSelectedIndex(-1);
+
+
+    txtTestID.requestFocusInWindow();
+
 
     }//GEN-LAST:event_btnCLEARActionPerformed
 
     private void btnDASHBOARDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDASHBOARDActionPerformed
-
-        DASHBOARD db = new DASHBOARD();
-        db.setVisible(true);
-        this.dispose();
+this.dispose();
 
     }//GEN-LAST:event_btnDASHBOARDActionPerformed
 
+    private void cmbPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPatientActionPerformed
+
+
+
+    if (cmbPatient.getSelectedItem() == null) {
+
+        return;
+    }
+
+
+    String patient =
+            cmbPatient
+                    .getSelectedItem()
+                    .toString();
+
+
+    String[] parts =
+            patient.split(" - ", 2);
+
+
+    if (parts.length == 2) {
+
+        txtPatientID.setText(parts[0]);
+
+        txtPatientName.setText(parts[1]);
+
+        patientName = parts[1];
+    }
+
+    }//GEN-LAST:event_cmbPatientActionPerformed
+
+    private void cmbDoctorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDoctorActionPerformed
+     
+
+
+    if (cmbDoctor.getSelectedItem() == null) {
+
+        return;
+    }
+
+
+    String doctor =
+            cmbDoctor
+                    .getSelectedItem()
+                    .toString();
+
+
+    String[] parts =
+            doctor.split(" - ", 2);
+
+
+    if (parts.length == 2) {
+
+        txtDoctorID.setText(parts[0]);
+
+        txtDoctorName.setText(parts[1]);
+
+        doctorName = parts[1];
+    }
+
+
+        
+    }//GEN-LAST:event_cmbDoctorActionPerformed
+
+    private void tblLaboratoryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblLaboratoryMouseClicked
+
+
+   
+
+
+    int row =
+            tblLaboratory.getSelectedRow();
+
+
+    if (row < 0) {
+
+        return;
+    }
+
+
+    txtTestID.setText(
+            tblLaboratory
+                    .getValueAt(row, 0)
+                    .toString());
+
+
+    txtPatientID.setText(
+            tblLaboratory
+                    .getValueAt(row, 1)
+                    .toString());
+
+
+    txtPatientName.setText(
+            tblLaboratory
+                    .getValueAt(row, 2)
+                    .toString());
+
+
+    txtDoctorID.setText(
+            tblLaboratory
+                    .getValueAt(row, 3)
+                    .toString());
+
+
+    txtDoctorName.setText(
+            tblLaboratory
+                    .getValueAt(row, 4)
+                    .toString());
+
+
+    txtTestName.setText(
+            tblLaboratory
+                    .getValueAt(row, 5)
+                    .toString());
+
+
+    txtResult.setText(
+            tblLaboratory
+                    .getValueAt(row, 6)
+                    .toString());
+
+
+    txtTestDate.setText(
+            tblLaboratory
+                    .getValueAt(row, 7)
+                    .toString());
+
+}
+    /*
+        tblLaboratory.getValueAt(row,7).toString());    }//GEN-LAST:event_tblLaboratoryMouseClicked
+                                                            */
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -608,7 +1250,11 @@ public class Laboratory extends javax.swing.JFrame {
     private javax.swing.JButton btnSAVE;
     private javax.swing.JButton btnSEARCH;
     private javax.swing.JButton btnUPDATE;
+    private javax.swing.JComboBox<String> cmbDoctor;
+    private javax.swing.JComboBox<String> cmbPatient;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

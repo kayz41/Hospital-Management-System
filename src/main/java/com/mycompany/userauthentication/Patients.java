@@ -8,7 +8,10 @@ import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import javax.swing.table.DefaultTableModel;
-
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import javax.swing.ImageIcon;
+import java.sql.Statement;
 /**
  *
  * @author Joel Kayz
@@ -21,8 +24,106 @@ public class Patients extends javax.swing.JFrame {
      * Creates new form ManageStudents
      */
     public Patients() {
-        initComponents();
+
+    initComponents();
+
+    loadDoctors();
+
+}
+    
+    
+    
+    
+    
+    
+    private void loadDoctors() {
+
+    try {
+
+        Connection con = DatabaseConnection.getConnection();
+
+        String sql =
+                "SELECT DoctorName " +
+                "FROM Doctors " +
+                "ORDER BY DoctorName";
+
+        PreparedStatement pst =
+                con.prepareStatement(sql);
+
+        ResultSet rs =
+                pst.executeQuery();
+
+        cmbDoctor.removeAllItems();
+
+        cmbDoctor.addItem("SELECT...");
+
+        while (rs.next()) {
+
+            cmbDoctor.addItem(
+                    rs.getString("DoctorName")
+            );
+
+        }
+
+        rs.close();
+        pst.close();
+        con.close();
+
+    } catch (Exception e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Doctor Loading Error: "
+                + e.getMessage()
+        );
+
     }
+
+}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -56,6 +157,8 @@ public class Patients extends javax.swing.JFrame {
         tblPatients = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
         btnCLEAR = new javax.swing.JButton();
+        lblQRCode = new javax.swing.JLabel();
+        lblBarcode = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -171,53 +274,49 @@ public class Patients extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(196, 196, 196)
+                .addComponent(jLabel7)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnBack1))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(btnSAVE, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(26, 26, 26)
                                 .addComponent(btnUPDATE, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnDELETE, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(18, 18, 18)
                                 .addComponent(btnSEARCH, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(26, 26, 26)
                                 .addComponent(btnDISPLAY)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
-                                .addComponent(btnCLEAR, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6))
-                        .addGap(68, 68, 68)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtPatientName)
-                            .addComponent(txtPatientID)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(btnCLEAR, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel6))
+                                .addGap(68, 68, 68)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(cmbDoctor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtEmailAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(136, 136, 136))))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnBack1)
+                                    .addComponent(txtPatientID, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                                    .addComponent(txtPatientName)
+                                    .addComponent(txtPhoneNumber)
+                                    .addComponent(txtEmailAddress))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(306, 306, 306)))))
                 .addContainerGap())
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(196, 196, 196)
-                .addComponent(jLabel7)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCLEAR, btnDELETE, btnDISPLAY, btnSAVE, btnSEARCH, btnUPDATE});
@@ -225,7 +324,7 @@ public class Patients extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
                 .addGap(5, 5, 5)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -269,30 +368,51 @@ public class Patients extends javax.swing.JFrame {
 
         jPanel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtEmailAddress, txtPatientID, txtPatientName, txtPhoneNumber});
 
+        lblQRCode.setForeground(new java.awt.Color(255, 255, 255));
+        lblQRCode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblQRCode.setText("QRcode");
+        lblQRCode.setOpaque(true);
+        lblQRCode.setPreferredSize(new java.awt.Dimension(300, 16));
+
+        lblBarcode.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblBarcode.setForeground(new java.awt.Color(255, 255, 255));
+        lblBarcode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblBarcode.setText("Barcode");
+        lblBarcode.setOpaque(true);
+        lblBarcode.setPreferredSize(new java.awt.Dimension(300, 100));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 356, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblQRCode, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblBarcode, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(157, 157, 157)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblQRCode, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblBarcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 887, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 624, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 685, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -352,51 +472,163 @@ public class Patients extends javax.swing.JFrame {
 
     private void btnBack1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBack1ActionPerformed
 
-        DASHBOARD dash = new DASHBOARD();
-        dash.setVisible(true);
-        this.dispose();
+      this.dispose();
     }//GEN-LAST:event_btnBack1ActionPerformed
 
     private void btnSAVEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSAVEActionPerformed
-  try{
- Connection con = DatabaseConnection.getConnection();
-      
-      String sql = "INSERT INTO Patients(PatientName,Doctor,PhoneNumber,EmailAddress) VALUES(?,?,?,?)";
-      
-      PreparedStatement pst = con.prepareStatement(sql);    
-      
-    
-       
-      pst.setString(1, 
-              txtPatientName.getText());
-      
-       pst.setString(2, 
-              cmbDoctor.getSelectedItem().toString());                                                
-       
-       pst.setInt(3,
-              Integer.parseInt(txtPhoneNumber.getText()));
-      
-      pst.setString(4,
-             (txtEmailAddress.getText()));
-      
-     
-      
-      pst.executeUpdate();
-      
-      JOptionPane.showMessageDialog(this,
-              "Patient Saved Successfully!");
-      
-      AuditLogger.log("Added Patient");
-}
+                                         
 
-   
-  catch(Exception e)
-  {
-      JOptionPane.showMessageDialog(this,
-              "Error: " + e.getMessage());
-       
-  }
-  
+    // INPUT VALIDATION
+
+    if (txtPatientName.getText().trim().isEmpty()) {
+
+        JOptionPane.showMessageDialog(this,
+                "Please enter patient name.");
+
+        return;
+    }
+
+
+    if (cmbDoctor.getSelectedItem() == null ||
+        cmbDoctor.getSelectedItem().toString().equals("Select")) {
+
+        JOptionPane.showMessageDialog(this,
+                "Please select a doctor.");
+
+        return;
+    }
+
+
+    if (txtPhoneNumber.getText().trim().isEmpty()) {
+
+        JOptionPane.showMessageDialog(this,
+                "Please enter phone number.");
+
+        return;
+    }
+
+
+    try {
+
+        Integer.parseInt(txtPhoneNumber.getText());
+
+    } catch (NumberFormatException e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Phone number must contain numbers only.");
+
+        return;
+    }
+
+
+    if (!txtEmailAddress.getText().trim().isEmpty()
+            && !txtEmailAddress.getText().contains("@")) {
+
+        JOptionPane.showMessageDialog(this,
+                "Please enter a valid email address.");
+
+        return;
+    }
+
+
+
+    // DATABASE INSERT
+
+    try {
+
+        Connection con = DatabaseConnection.getConnection();
+
+        String sql = "INSERT INTO Patients(PatientName,Doctor,PhoneNumber,EmailAddress) VALUES(?,?,?,?)";
+
+        PreparedStatement pst = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+
+        pst.setString(1,
+                txtPatientName.getText());
+
+
+        pst.setString(2,
+                cmbDoctor.getSelectedItem().toString());
+
+
+        pst.setInt(3,
+                Integer.parseInt(txtPhoneNumber.getText()));
+
+
+        pst.setString(4,
+                txtEmailAddress.getText());
+
+
+        pst.executeUpdate();
+
+
+        ResultSet rs = pst.getGeneratedKeys();
+
+
+        if (rs.next()) {
+
+            int patientID = rs.getInt(1);
+
+            txtPatientID.setText(String.valueOf(patientID));
+
+
+            displayBarcode(String.valueOf(patientID));
+
+
+            displayQRCode(String.valueOf(patientID));
+
+
+
+           EmailService.sendEmail(
+        txtEmailAddress.getText(),
+        "Welcome to KAYZ INTERNATIONAL HOSPITAL",
+
+        "Dear " + txtPatientName.getText() + ",\n\n"
+
+        + "Welcome to KAYZ INTERNATIONAL HOSPITAL.\n\n"
+
+        + "We are pleased to inform you that your patient registration has been completed successfully.\n\n"
+
+        + "Patient Details:\n"
+        + "----------------------------------------\n"
+        + "Patient ID   : " + patientID + "\n"
+        + "Patient Name : " + txtPatientName.getText() + "\n"
+        + "Assigned Doctor : " + cmbDoctor.getSelectedItem().toString() + "\n"
+        + "----------------------------------------\n\n"
+
+        + "Please keep your Patient ID safe, as it will be required for appointments, laboratory services, pharmacy services, billing, and future medical visits.\n\n"
+
+        + "For any inquiries or assistance, please contact us:\n\n"
+
+        + "KAYZ INTERNATIONAL HOSPITAL\n"
+        + "Email: joelkayima651@gmail.com\n"
+        + "Telephone: 0747841584\n\n"
+
+        + "Thank you for choosing KAYZ INTERNATIONAL HOSPITAL.\n"
+        + "We are committed to providing you with quality healthcare services.\n\n"
+
+        + "Kind Regards,\n"
+        + "Patient Registration Department\n"
+        + "KAYZ INTERNATIONAL HOSPITAL"
+);
+        }
+
+
+        JOptionPane.showMessageDialog(this,
+                "Patient Saved Successfully!");
+
+
+        AuditLogger.log("Added Patient");
+
+
+    } catch (Exception e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Error: " + e.getMessage());
+
+    }
+
+
     }//GEN-LAST:event_btnSAVEActionPerformed
 
     private void btnDISPLAYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDISPLAYActionPerformed
@@ -479,6 +711,106 @@ public class Patients extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnUPDATEActionPerformed
 
+    
+    
+    
+    private void displayBarcode(String patientID) {
+
+    try {
+
+        BufferedImage barcode =
+                BarcodeGenerator.generateBarcode(patientID);
+
+        Image scaledImage = barcode.getScaledInstance(
+                lblBarcode.getWidth(),
+                lblBarcode.getHeight(),
+                Image.SCALE_SMOOTH
+        );
+
+        lblBarcode.setIcon(new ImageIcon(scaledImage));
+
+    } catch (Exception e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Barcode Error: " + e.getMessage());
+
+    }
+
+}
+    
+    
+    
+    
+    
+    
+    
+    private void displayQRCode(String patientID) {
+
+    try {
+
+        BufferedImage qrCode =
+                QRCodeGenerator.generateQRCode(patientID);
+
+        Image scaledImage = qrCode.getScaledInstance(
+                lblQRCode.getWidth(),
+                lblQRCode.getHeight(),
+                Image.SCALE_SMOOTH
+        );
+
+        lblQRCode.setIcon(new ImageIcon(scaledImage));
+
+    } catch (Exception e) {
+
+        JOptionPane.showMessageDialog(this,
+                "QR Code Error: " + e.getMessage());
+
+    }
+
+}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     private void btnDELETEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDELETEActionPerformed
        try{
            Connection con = DatabaseConnection.getConnection();
@@ -589,6 +921,8 @@ public class Patients extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblBarcode;
+    private javax.swing.JLabel lblQRCode;
     private javax.swing.JTable tblPatients;
     private javax.swing.JTextField txtEmailAddress;
     private javax.swing.JTextField txtPatientID;

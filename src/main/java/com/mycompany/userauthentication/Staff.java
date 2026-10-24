@@ -521,9 +521,7 @@ public class Staff extends javax.swing.JFrame {
 
     private void btnDASHBOARDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDASHBOARDActionPerformed
 
-        DASHBOARD db = new DASHBOARD();
-        db.setVisible(true);
-        this.dispose();
+     this.dispose();
     }//GEN-LAST:event_btnDASHBOARDActionPerformed
 
     /**

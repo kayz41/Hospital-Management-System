@@ -1,1 +1,31 @@
-target/
+# Maven build output
+/target/
+
+# Java compiled files
+*.class
+
+# Local secrets and configuration
+.env
+.env.*
+!.env.example
+
+# Logs and backups
+*.log
+/logs/
+*.bak
+*.backup
+/sms-backup-*/
+
+# Temporary diagnostic and test files
+HttpsDiagnostic.java
+DatabaseSchemaCheck.java
+EmailTest.java
+EmailTest2.java
+ExpiryAlertTest.java
+SmsSandboxTest.java
+
+# Operating system files
+.DS_Store
+Thumbs.db
+# Unidentified local test document
+/test.pdf

@@ -10,6 +10,9 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 
+import org.mindrot.jbcrypt.BCrypt;
+
+
 /**
  *
  * @author Joel Kayz
@@ -23,6 +26,26 @@ public class Users extends javax.swing.JFrame {
      */
     public Users() {
         initComponents();
+        
+        if (UserSession.role == null
+            || !UserSession.role.equalsIgnoreCase("Admin")) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Access Denied.\n\n"
+                + "Only an Administrator can access "
+                + "User Management.",
+                "Access Denied",
+                JOptionPane.WARNING_MESSAGE);
+
+        dispose();
+
+        return;
+    }
+
+    txtUSERID.setEditable(false);
+
+    txtUSERNAME.requestFocusInWindow();
         
        
     }
@@ -47,6 +70,7 @@ public class Users extends javax.swing.JFrame {
         btnDISPLAY = new javax.swing.JButton();
         btnCLEAR1 = new javax.swing.JButton();
         btnDASHBOARD = new javax.swing.JButton();
+        btnUNLOCK = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtUSERID = new javax.swing.JTextField();
@@ -66,7 +90,7 @@ public class Users extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("USER SIGN IN");
+        jLabel3.setText("USER REGISTRATION MANAGEMENT");
         jLabel3.setToolTipText("");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -74,16 +98,16 @@ public class Users extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(288, 288, 288)
+                .addGap(178, 178, 178)
                 .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(160, 160, 160))
+                .addGap(270, 270, 270))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(32, 32, 32)
+                .addGap(33, 33, 33)
                 .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(52, 52, 52))
+                .addGap(51, 51, 51))
         );
 
         jPanel3.setBackground(new java.awt.Color(102, 102, 102));
@@ -143,17 +167,23 @@ public class Users extends javax.swing.JFrame {
         btnDASHBOARD.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         btnDASHBOARD.addActionListener(this::btnDASHBOARDActionPerformed);
 
+        btnUNLOCK.setBackground(new java.awt.Color(102, 102, 102));
+        btnUNLOCK.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnUNLOCK.setForeground(new java.awt.Color(255, 255, 255));
+        btnUNLOCK.setText("UNLOCK ACCOUNT");
+        btnUNLOCK.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnUNLOCK.addActionListener(this::btnUNLOCKActionPerformed);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnDASHBOARD, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(btnSAVE, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
+                        .addGap(18, 18, 18)
                         .addComponent(btnUPDATE, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29)
                         .addComponent(btnDELETE, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -161,9 +191,13 @@ public class Users extends javax.swing.JFrame {
                         .addComponent(btnSEARCH, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29)
                         .addComponent(btnDISPLAY, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
-                        .addComponent(btnCLEAR1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCLEAR1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(btnUNLOCK, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(502, 502, 502)
+                        .addComponent(btnDASHBOARD, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,9 +210,11 @@ public class Users extends javax.swing.JFrame {
                     .addComponent(btnSEARCH)
                     .addComponent(btnDISPLAY)
                     .addComponent(btnCLEAR1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                .addComponent(btnDASHBOARD, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnDASHBOARD, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                    .addComponent(btnUNLOCK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -199,15 +235,23 @@ public class Users extends javax.swing.JFrame {
 
         tblUsers.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "User ID", "User Name", "Role"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tblUsers);
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -218,7 +262,7 @@ public class Users extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 797, Short.MAX_VALUE)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(39, 39, 39)
@@ -242,7 +286,7 @@ public class Users extends javax.swing.JFrame {
                             .addComponent(txtUSERNAME)
                             .addComponent(txtPASSWORD)
                             .addComponent(txtUSERID, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -261,13 +305,13 @@ public class Users extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(txtPASSWORD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmbRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -293,204 +337,1275 @@ public class Users extends javax.swing.JFrame {
 
     private void btnSAVEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSAVEActionPerformed
 
-        try{
-            Connection con = DatabaseConnection.getConnection();
+   
 
-            String sql = "INSERT INTO Users (UserName,Password,Role)"
+ 
 
-            +" VALUES(?,?,?)";
+    try {
 
-            PreparedStatement pst = con.prepareStatement(sql);
+        String username =
+                txtUSERNAME
+                        .getText()
+                        .trim();
 
-            pst.setString(1,
-                txtUSERNAME.getText());
 
-            pst.setString(2,
-                txtPASSWORD.getText());
-            
-             pst.setString(3, 
-              cmbRole.getSelectedItem().toString());
+        String password =
+                new String(
+                        txtPASSWORD
+                                .getPassword());
 
-                       pst.executeUpdate();
 
-            JOptionPane.showMessageDialog(this,
+        if (username.isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter Username.");
+
+            return;
+        }
+
+
+        if (password.isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter Password.");
+
+            return;
+        }
+
+
+        if (cmbRole.getSelectedIndex() == 0) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a Role.");
+
+            return;
+        }
+
+
+        String role =
+                cmbRole
+                        .getSelectedItem()
+                        .toString();
+
+
+        Connection con =
+                DatabaseConnection.getConnection();
+
+
+        /*
+         * ==========================================
+         * CHECK WHETHER USERNAME ALREADY EXISTS
+         * ==========================================
+         */
+
+        String checkSQL =
+                "SELECT UserID "
+              + "FROM Users "
+              + "WHERE Username=?";
+
+
+        PreparedStatement checkPst =
+                con.prepareStatement(checkSQL);
+
+
+        checkPst.setString(
+                1,
+                username);
+
+
+        ResultSet checkRs =
+                checkPst.executeQuery();
+
+
+        if (checkRs.next()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Username already exists.");
+
+            checkRs.close();
+            checkPst.close();
+            con.close();
+
+            return;
+        }
+
+
+        checkRs.close();
+        checkPst.close();
+
+
+        /*
+         * ==========================================
+         * HASH PASSWORD WITH BCRYPT
+         * ==========================================
+         */
+
+        String hashedPassword =
+                BCrypt.hashpw(
+                        password,
+                        BCrypt.gensalt());
+
+
+        /*
+         * ==========================================
+         * INSERT USER
+         * ==========================================
+         */
+
+        String sql =
+                "INSERT INTO Users "
+              + "(Username, Password, Role) "
+              + "VALUES (?, ?, ?)";
+
+
+        PreparedStatement pst =
+                con.prepareStatement(sql);
+
+
+        pst.setString(
+                1,
+                username);
+
+
+        pst.setString(
+                2,
+                hashedPassword);
+
+
+        pst.setString(
+                3,
+                role);
+
+
+        pst.executeUpdate();
+
+
+        pst.close();
+        con.close();
+
+
+        /*
+         * ==========================================
+         * SUCCESS
+         * ==========================================
+         */
+
+        JOptionPane.showMessageDialog(
+                this,
                 "User Saved Successfully!");
-            
-            AuditLogger.log("Added User");
-        }
 
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(this,
-                "Error: " + e.getMessage());
 
-        }
+        AuditLogger.log(
+                "Added User: "
+              + username);
+
+
+        /*
+         * ==========================================
+         * CLEAR FORM
+         * ==========================================
+         */
+
+        txtUSERID.setText("");
+
+        txtUSERNAME.setText("");
+
+        txtPASSWORD.setText("");
+
+        cmbRole.setSelectedIndex(0);
+
+    }
+
+    catch (Exception e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Error: "
+              + e.getMessage());
+
+        e.printStackTrace();
+    }
+
+
     }//GEN-LAST:event_btnSAVEActionPerformed
 
     private void btnUPDATEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUPDATEActionPerformed
-        try
-        {
-            Connection con = DatabaseConnection.getConnection();
+     
+
+
+    try {
+
+        String userIDText =
+                txtUSERID
+                        .getText()
+                        .trim();
+
+
+        String username =
+                txtUSERNAME
+                        .getText()
+                        .trim();
+
+
+        String password =
+                new String(
+                        txtPASSWORD
+                                .getPassword());
+
+
+        if (userIDText.isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter User ID.");
+
+            return;
+        }
+
+
+        if (username.isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter Username.");
+
+            return;
+        }
+
+
+        if (cmbRole.getSelectedIndex() == 0) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a Role.");
+
+            return;
+        }
+
+
+        int userID;
+
+        try {
+
+            userID =
+                    Integer.parseInt(
+                            userIDText);
+
+        }
+
+        catch (NumberFormatException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "User ID must be a valid number.");
+
+            return;
+        }
+
+
+        String role =
+                cmbRole
+                        .getSelectedItem()
+                        .toString();
+
+
+        Connection con =
+                DatabaseConnection.getConnection();
+
+
+        /*
+         * =====================================
+         * CHECK WHETHER USER EXISTS
+         * =====================================
+         */
+
+        String checkSQL =
+                "SELECT UserID "
+              + "FROM Users "
+              + "WHERE UserID=?";
+
+
+        PreparedStatement checkPst =
+                con.prepareStatement(
+                        checkSQL);
+
+
+        checkPst.setInt(
+                1,
+                userID);
+
+
+        ResultSet checkRs =
+                checkPst.executeQuery();
+
+
+        if (!checkRs.next()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "User not found.");
+
+            checkRs.close();
+            checkPst.close();
+            con.close();
+
+            return;
+        }
+
+
+        checkRs.close();
+        checkPst.close();
+
+
+        /*
+         * =====================================
+         * CHECK USERNAME DUPLICATE
+         * =====================================
+         */
+
+        String usernameSQL =
+                "SELECT UserID "
+              + "FROM Users "
+              + "WHERE Username=? "
+              + "AND UserID<>?";
+
+
+        PreparedStatement usernamePst =
+                con.prepareStatement(
+                        usernameSQL);
+
+
+        usernamePst.setString(
+                1,
+                username);
+
+        usernamePst.setInt(
+                2,
+                userID);
+
+
+        ResultSet usernameRs =
+                usernamePst.executeQuery();
+
+
+        if (usernameRs.next()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Username already belongs to another user.");
+
+            usernameRs.close();
+            usernamePst.close();
+            con.close();
+
+            return;
+        }
+
+
+        usernameRs.close();
+        usernamePst.close();
+
+
+        /*
+         * =====================================
+         * UPDATE USER
+         * =====================================
+         *
+         * If password was entered,
+         * BCrypt will hash the new password.
+         *
+         * If password is empty,
+         * the existing password remains unchanged.
+         */
+
+
+        int rowsUpdated;
+
+
+        if (password.isEmpty()) {
 
             String sql =
-            "UPDATE USER SET "
-            +"USERNAME=?,PASSWORD=?,"
-            +"WHERE USERID=?";
+                    "UPDATE Users "
+                  + "SET Username=?, Role=? "
+                  + "WHERE UserID=?";
+
 
             PreparedStatement pst =
-            con.prepareStatement(sql);
+                    con.prepareStatement(
+                            sql);
 
-            pst.setString(1,
-               txtUSERNAME.getText());
 
-            pst.setString(2,
-                txtPASSWORD.getText());
+            pst.setString(
+                    1,
+                    username);
 
-            pst.setString(3,
-                cmbRole.getSelectedItem().toString());
+            pst.setString(
+                    2,
+                    role);
 
-            pst.setInt(4,
-                Integer.parseInt(txtUSERID.getText()));
+            pst.setInt(
+                    3,
+                    userID);
 
-           
-            pst.executeUpdate();
 
-            JOptionPane.showMessageDialog(this,
-                "User Updated Successfully");
-            
-            AuditLogger.log("Updated User");
-        }
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(this,
-                "Error : " + e.getMessage());
+            rowsUpdated =
+                    pst.executeUpdate();
+
+
+            pst.close();
 
         }
+
+        else {
+
+            String hashedPassword =
+                    BCrypt.hashpw(
+                            password,
+                            BCrypt.gensalt());
+
+
+            String sql =
+                    "UPDATE Users "
+                  + "SET Username=?, Password=?, Role=? "
+                  + "WHERE UserID=?";
+
+
+            PreparedStatement pst =
+                    con.prepareStatement(
+                            sql);
+
+
+            pst.setString(
+                    1,
+                    username);
+
+            pst.setString(
+                    2,
+                    hashedPassword);
+
+            pst.setString(
+                    3,
+                    role);
+
+            pst.setInt(
+                    4,
+                    userID);
+
+
+            rowsUpdated =
+                    pst.executeUpdate();
+
+
+            pst.close();
+        }
+
+
+        con.close();
+
+
+        if (rowsUpdated > 0) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "User Updated Successfully!");
+
+
+            AuditLogger.log(
+                    "Updated User: "
+                    + username);
+
+
+            txtUSERID.setText("");
+
+            txtUSERNAME.setText("");
+
+            txtPASSWORD.setText("");
+
+            cmbRole.setSelectedIndex(0);
+
+        }
+
+        else {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "User update failed.");
+
+        }
+
+    }
+
+    catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Update Error:\n"
+                + e.getMessage());
+    }
+
     }//GEN-LAST:event_btnUPDATEActionPerformed
 
     private void btnDELETEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDELETEActionPerformed
-        int confirm = JOptionPane.showConfirmDialog(
-            this,
-            "Are you sure want to delete this User?",
-            "Confirm Deletion",
-            JOptionPane.YES_NO_OPTION
-        );
-        if (confirm ==JOptionPane.YES_OPTION){
-            try
-            {
-                Connection con = DatabaseConnection.getConnection();
+     
 
-                String sql =
-                "DELETE FROM Users WHERE UserID=?";
 
-                PreparedStatement pst =
-                con.prepareStatement(sql);
+    try {
 
-                pst.setInt(1,
-                    Integer.parseInt(txtUSERID.getText()));
+        String userIDText =
+                txtUSERID
+                        .getText()
+                        .trim();
 
+
+        if (userIDText.isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter User ID.");
+
+            return;
+        }
+
+
+        int userID;
+
+        try {
+
+            userID =
+                    Integer.parseInt(
+                            userIDText);
+
+        }
+
+        catch (NumberFormatException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "User ID must be a valid number.");
+
+            return;
+        }
+
+
+        int confirm =
+                JOptionPane.showConfirmDialog(
+                        this,
+                        "Are you sure you want to delete "
+                        + "this user?\n\n"
+                        + "User ID: "
+                        + userID,
+                        "Confirm User Deletion",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+
+
+        if (confirm != JOptionPane.YES_OPTION) {
+
+            return;
+        }
+
+
+        Connection con =
+                DatabaseConnection.getConnection();
+
+
+        /*
+         * =====================================
+         * CHECK WHETHER USER EXISTS
+         * =====================================
+         */
+
+        String checkSQL =
+                "SELECT Username "
+              + "FROM Users "
+              + "WHERE UserID=?";
+
+
+        PreparedStatement checkPst =
+                con.prepareStatement(
+                        checkSQL);
+
+
+        checkPst.setInt(
+                1,
+                userID);
+
+
+        ResultSet checkRs =
+                checkPst.executeQuery();
+
+
+        if (!checkRs.next()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "User not found.");
+
+            checkRs.close();
+            checkPst.close();
+            con.close();
+
+            return;
+        }
+
+
+        String username =
+                checkRs.getString(
+                        "Username");
+
+
+        checkRs.close();
+        checkPst.close();
+
+
+        /*
+         * =====================================
+         * DELETE USER
+         * =====================================
+         */
+
+        String sql =
+                "DELETE FROM Users "
+              + "WHERE UserID=?";
+
+
+        PreparedStatement pst =
+                con.prepareStatement(
+                        sql);
+
+
+        pst.setInt(
+                1,
+                userID);
+
+
+        int rowsDeleted =
                 pst.executeUpdate();
 
-                JOptionPane.showMessageDialog(this,
-                    "User Deleted Successfully");
-                
-                AuditLogger.log("Deleted User");
-            }
-            catch(Exception e)
-            {
-                JOptionPane.showMessageDialog(this,
-                    "Error : " + e.getMessage());
-            }
+
+        pst.close();
+        con.close();
+
+
+        if (rowsDeleted > 0) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "User Deleted Successfully!");
+
+
+            AuditLogger.log(
+                    "Deleted User: "
+                    + username);
+
+
+            /*
+             * =================================
+             * CLEAR FORM
+             * =================================
+             */
+
+            txtUSERID.setText("");
+
+            txtUSERNAME.setText("");
+
+            txtPASSWORD.setText("");
+
+            cmbRole.setSelectedIndex(0);
+
+
+            /*
+             * =================================
+             * REFRESH TABLE
+             * =================================
+             */
+
+            btnDISPLAY.doClick();
+
         }
+
+        else {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "User deletion failed.");
+
+        }
+
+    }
+
+    catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Delete Error:\n"
+                + e.getMessage());
+    }
+
+
     }//GEN-LAST:event_btnDELETEActionPerformed
 
     private void btnSEARCHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSEARCHActionPerformed
 
-        try{
-            Connection con = DatabaseConnection.getConnection();
-            String sql = "SELECT * FROM Users WHERE UserID =?";
+     
 
-            PreparedStatement pst = con.prepareStatement(sql);
 
-            pst.setInt(1,
-                Integer.parseInt(txtUSERID.getText()));
+    try {
 
-            ResultSet rs = pst.executeQuery();
+        String userIDText =
+                txtUSERID
+                        .getText()
+                        .trim();
 
-            if(rs.next())
-            {
-                txtUSERID.setText(rs.getString("UserName"));
-                txtUSERNAME.setText(rs.getString("Password"));     
-                cmbRole.setSelectedItem(rs.getString("Role"));
- 
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(this,
-                    "User Not Found!");
-            }
+
+        if (userIDText.isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter User ID.");
+
+            return;
         }
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(this,
-                "Error: " + e.getMessage());
+
+
+        int userID;
+
+        try {
+
+            userID =
+                    Integer.parseInt(
+                            userIDText);
+
         }
+
+        catch (NumberFormatException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "User ID must be a valid number.");
+
+            return;
+        }
+
+
+        Connection con =
+                DatabaseConnection.getConnection();
+
+
+        String sql =
+                "SELECT UserID, Username, Role "
+              + "FROM Users "
+              + "WHERE UserID=?";
+
+
+        PreparedStatement pst =
+                con.prepareStatement(
+                        sql);
+
+
+        pst.setInt(
+                1,
+                userID);
+
+
+        ResultSet rs =
+                pst.executeQuery();
+
+
+        if (rs.next()) {
+
+            /*
+             * =================================
+             * LOAD USER INFORMATION
+             * =================================
+             */
+
+            txtUSERID.setText(
+                    String.valueOf(
+                            rs.getInt(
+                                    "UserID")));
+
+
+            txtUSERNAME.setText(
+                    rs.getString(
+                            "Username"));
+
+
+            /*
+             * Password is intentionally NOT
+             * loaded into the password field.
+             *
+             * The database contains a BCrypt
+             * hash, not the original password.
+             */
+
+            txtPASSWORD.setText("");
+
+
+            cmbRole.setSelectedItem(
+                    rs.getString(
+                            "Role"));
+
+
+        }
+
+        else {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "User Not Found.");
+
+            txtUSERNAME.setText("");
+
+            txtPASSWORD.setText("");
+
+            cmbRole.setSelectedIndex(0);
+        }
+
+
+        rs.close();
+        pst.close();
+        con.close();
+
+    }
+
+    catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Search Error:\n"
+                + e.getMessage());
+    }
+
+
     }//GEN-LAST:event_btnSEARCHActionPerformed
 
     private void btnDISPLAYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDISPLAYActionPerformed
 
-        try{
-            Connection con = DatabaseConnection.getConnection();
-
-            String sql = "SELECT * FROM Users";
-
-            PreparedStatement pst = con.prepareStatement(sql);
-
-            ResultSet rs = pst.executeQuery();
-
-            DefaultTableModel model =
-            (DefaultTableModel) tblUsers.getModel();
-            model.setRowCount(0);
-
-            while(rs.next())
-            {
-                model.addRow(new Object[]
-                    {
-                        rs.getObject(1),
-                        rs.getObject(2),
-                        rs.getObject(3),
-                        rs.getObject(4)
 
 
+    try {
+
+        Connection con =
+                DatabaseConnection.getConnection();
+
+
+        /*
+         * ==========================================
+         * SELECT ONLY SAFE DISPLAY COLUMNS
+         * ==========================================
+         *
+         * Password is deliberately NOT selected.
+         */
+
+        String sql =
+                "SELECT UserID, Username, Role "
+              + "FROM Users "
+              + "ORDER BY UserID";
+
+
+        PreparedStatement pst =
+                con.prepareStatement(sql);
+
+
+        ResultSet rs =
+                pst.executeQuery();
+
+
+        /*
+         * ==========================================
+         * TABLE MODEL
+         * ==========================================
+         */
+
+        DefaultTableModel model =
+                (DefaultTableModel)
+                tblUsers.getModel();
+
+
+        model.setRowCount(0);
+
+
+        /*
+         * ==========================================
+         * LOAD USERS
+         * ==========================================
+         */
+
+        while (rs.next()) {
+
+            model.addRow(
+                    new Object[]{
+
+                        rs.getInt(
+                                "UserID"),
+
+                        rs.getString(
+                                "Username"),
+
+                        rs.getString(
+                                "Role")
                     });
-                }
-            }
-            catch(Exception e)
-            {
-                JOptionPane.showMessageDialog(this,
-                    "Error: "+ e.getMessage());
+        }
 
-            }
+
+        /*
+         * ==========================================
+         * CLOSE DATABASE RESOURCES
+         * ==========================================
+         */
+
+        rs.close();
+
+        pst.close();
+
+        con.close();
+
+    }
+
+    catch (Exception e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Display Error: "
+              + e.getMessage());
+
+        e.printStackTrace();
+    }
+
     }//GEN-LAST:event_btnDISPLAYActionPerformed
 
     private void btnCLEAR1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCLEAR1ActionPerformed
 
-        txtUSERID.setText("");
-        txtUSERNAME.setText("");
-        txtPASSWORD.setText("");
-        cmbRole.setSelectedIndex(0);
+
+    txtUSERID.setText("");
+
+    txtUSERNAME.setText("");
+
+    txtPASSWORD.setText("");
+
+    cmbRole.setSelectedIndex(0);
+
+    txtUSERID.requestFocusInWindow();
 
     }//GEN-LAST:event_btnCLEAR1ActionPerformed
 
     private void btnDASHBOARDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDASHBOARDActionPerformed
       
-        DASHBOARD db = new DASHBOARD();
-        db.setVisible(true);
-        this.dispose();
-        
+     this.dispose();
         
         
     }//GEN-LAST:event_btnDASHBOARDActionPerformed
+
+    private void btnUNLOCKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUNLOCKActionPerformed
+  
+    
+
+    /*
+     * =========================================
+     * ADMIN AUTHORIZATION
+     * =========================================
+     */
+
+    if (UserSession.role == null
+            || !UserSession.role.equalsIgnoreCase("Admin")) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Access Denied.\n\n"
+              + "Only an Administrator can unlock "
+              + "user accounts.",
+                "Access Denied",
+                JOptionPane.WARNING_MESSAGE);
+
+        return;
+    }
+
+
+    /*
+     * =========================================
+     * GET USER ID
+     * =========================================
+     */
+
+    String userIDText =
+            txtUSERID
+                    .getText()
+                    .trim();
+
+
+    if (userIDText.isEmpty()) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Please search for a User first.",
+                "User Required",
+                JOptionPane.WARNING_MESSAGE);
+
+        return;
+    }
+
+
+    int userID;
+
+
+    try {
+
+        userID =
+                Integer.parseInt(
+                        userIDText);
+
+    }
+
+    catch (NumberFormatException e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "User ID must be a valid number.",
+                "Invalid User ID",
+                JOptionPane.WARNING_MESSAGE);
+
+        return;
+    }
+
+
+    /*
+     * =========================================
+     * VERIFY USER EXISTS
+     * =========================================
+     */
+
+    try {
+
+        Connection con =
+                DatabaseConnection.getConnection();
+
+
+        String checkSQL =
+                "SELECT UserID, Username, "
+              + "AccountLocked "
+              + "FROM Users "
+              + "WHERE UserID=?";
+
+
+        PreparedStatement checkPst =
+                con.prepareStatement(
+                        checkSQL);
+
+
+        checkPst.setInt(
+                1,
+                userID);
+
+
+        ResultSet checkRs =
+                checkPst.executeQuery();
+
+
+        if (!checkRs.next()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "User Not Found.",
+                    "Unlock Failed",
+                    JOptionPane.WARNING_MESSAGE);
+
+
+            checkRs.close();
+            checkPst.close();
+            con.close();
+
+            return;
+        }
+
+
+        String username =
+                checkRs.getString(
+                        "Username");
+
+
+        boolean accountLocked =
+                checkRs.getBoolean(
+                        "AccountLocked");
+
+
+        checkRs.close();
+        checkPst.close();
+
+
+        /*
+         * =====================================
+         * CHECK WHETHER ACCOUNT IS LOCKED
+         * =====================================
+         */
+
+        if (!accountLocked) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "This account is not locked.",
+                    "Account Not Locked",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+
+            con.close();
+
+            return;
+        }
+
+
+        /*
+         * =====================================
+         * CONFIRM UNLOCK
+         * =====================================
+         */
+
+        int choice =
+                JOptionPane.showConfirmDialog(
+                        this,
+                        "Unlock account for:\n\n"
+                      + "Username: "
+                      + username
+                      + "\nUser ID: "
+                      + userID
+                      + "\n\nContinue?",
+                        "Confirm Account Unlock",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+
+
+        if (choice != JOptionPane.YES_OPTION) {
+
+            con.close();
+
+            return;
+        }
+
+
+        /*
+         * =====================================
+         * UNLOCK ACCOUNT
+         * =====================================
+         */
+
+        String updateSQL =
+                "UPDATE Users "
+              + "SET FailedAttempts=0, "
+              + "AccountLocked=0 "
+              + "WHERE UserID=?";
+
+
+        PreparedStatement updatePst =
+                con.prepareStatement(
+                        updateSQL);
+
+
+        updatePst.setInt(
+                1,
+                userID);
+
+
+        int rowsUpdated =
+                updatePst.executeUpdate();
+
+
+        updatePst.close();
+        con.close();
+
+
+        /*
+         * =====================================
+         * RESULT
+         * =====================================
+         */
+
+        if (rowsUpdated > 0) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Account unlocked successfully.\n\n"
+                  + "Username: "
+                  + username
+                  + "\nFailed attempts reset to 0.",
+                    "Account Unlocked",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+
+            AuditLogger.log(
+                    "Admin Unlocked User Account: "
+                  + username
+                  + " (UserID: "
+                  + userID
+                  + ")");
+
+
+            /*
+             * Refresh the table.
+             */
+
+            btnDISPLAY.doClick();
+
+        }
+
+        else {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Account could not be unlocked.",
+                    "Unlock Failed",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+
+    }
+
+    catch (Exception e) {
+
+        e.printStackTrace();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Unlock Error:\n"
+              + e.getMessage(),
+                "Unlock Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    }//GEN-LAST:event_btnUNLOCKActionPerformed
 
     /**
      * @param args the command line arguments
@@ -524,6 +1639,7 @@ public class Users extends javax.swing.JFrame {
     private javax.swing.JButton btnDISPLAY;
     private javax.swing.JButton btnSAVE;
     private javax.swing.JButton btnSEARCH;
+    private javax.swing.JButton btnUNLOCK;
     private javax.swing.JButton btnUPDATE;
     private javax.swing.JComboBox<String> cmbRole;
     private javax.swing.JLabel jLabel1;

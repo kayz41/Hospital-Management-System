@@ -20,7 +20,30 @@ The application includes modules for patient management, doctor management, appo
 It also incorporates security-related functionality such as BCrypt password hashing, login verification, role-based dashboard permissions, audit logging, and session management.
 
 The project is being developed with the long-term objective of improving its reliability, usability, security, and potential for future web-based access.
+## Application Screenshots
 
+The following screenshots provide a visual overview of the Hospital Management System's desktop interface and selected modules.
+
+### 1. Login
+![Login Screen](Login.png)
+
+### 2. Dashboard
+![Dashboard](Dashboard.png)
+
+### 3. Patient Management
+![Patient Management](Patient.png)
+
+### 4. Doctor Management
+![Doctor Management](Doctor.png)
+
+### 5. Billing Management
+![Billing Management](Billing.png)
+
+### 6. Appointment Management
+![Appointment Management](Appointment.png)
+
+### 7. Reports
+![Reports](Report.png)
 ## Key Features
 
 ### Application and administration
